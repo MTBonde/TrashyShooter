@@ -58,13 +58,13 @@ namespace GameServer
             return (messageType, priority, extraBits);
         }
 
-        // Serialize the message object to a byte array (using MessagePack)
+        // Serialize the message object to a byte array with MessagePack
         public static byte[] SerializeMessage<T>(T message)
         {
             return MessagePackSerializer.Serialize(message);
         }
 
-        // Deserialize the byte array back to a message object (using MessagePack)
+        // Deserialize the byte array back to a message object with MessagePack
         public static T DeserializeMessage<T>(byte[] messageBytes)
         {
             return MessagePackSerializer.Deserialize<T>(messageBytes);
@@ -73,9 +73,9 @@ namespace GameServer
         public static void SendNetworkMessage(object message, MessageType messageType, MessagePriority priority, IPEndPoint clientEP)
         {
             // Step 1: Encode the header
-            byte header = EncodeHeader(messageType, priority, 0); // extraBits set to 0 for now
+            byte header = EncodeHeader(messageType, priority, 0); // extraBits set to 0 for now, but what to do with them
 
-            // Step 2: Serialize the message object (assuming MessagePack)
+            // Step 2: Serialize the message object  with MessagePack
             byte[] messageBytes = MessagePackSerializer.Serialize(message);
 
             // Step 3: Combine header and message
@@ -96,7 +96,7 @@ namespace GameServer
             byte[] messageBytes = new byte[receivedBytes.Length - 1];
             Buffer.BlockCopy(receivedBytes, 1, messageBytes, 0, messageBytes.Length);
 
-            // Step 3: Deserialize the message object (assuming MessagePack)
+            // Step 3: Deserialize the message object  with MessagePack
             object message = MessagePackSerializer.Deserialize<object>(messageBytes);
 
             return (message, decodedMessageType, decodedPriority);
