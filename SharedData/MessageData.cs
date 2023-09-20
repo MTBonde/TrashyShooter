@@ -2,39 +2,46 @@
 
 using MessagePack;
 
-namespace GameServer
+namespace SharedData
 {
     public static class MessageData
     {
         public enum MessageType : byte
         {
-            // Connection Management 
+            // Connection
             Join = 0,  // 0000
             JoinAnswer = 1,  // 0001
-
             Leave = 2,  // 0010
             PlayerJoined = 3,  // 0011
             PlayerLeft = 4,  // 0100
+
+            // Player
             PlayerUpdate = 5,  // 0101
             PlayerSnapShot = 6,  // 0110
+            PlayerInfoUpdate = 7,  // 0111 
+            
+            // Spiltilstand
+            Heartbeat = 8,  // 1000 
+            GameState = 9,  // 1001
 
-            Heartbeat = 7,  // 0111        
+            // Spillerhandlinger
+            PlayerAction = 10,  // 1010
 
-            // Game State 
-            GameState = 8,  // 1000        
+            // Events og kontrol
+            GameEvent = 11,  // 1011
 
-            // Player Actions 
-            PlayerAction = 9,  // 1001
+            // Kommunikation
+            Chat = 12,  // 1100
 
-            // Events and Controls 
-            GameEvent = 10,  // 1010
+            // Fejl
+            Error = 13,  // 1101 
 
-            // Communication  
-            Chat = 11,  // 1011
-
-            // Errors 
-            Error = 12  // 1100
+            // Rserve
+            res1 = 14,
+            res2 = 15,
+            res3 = 16
         }
+
 
 
         public enum MessagePriority : byte
@@ -46,17 +53,18 @@ namespace GameServer
         // Encoding the header byte
         public static byte EncodeHeader(MessageType messageType, MessagePriority priority, byte extraBits)
         {
-            return (byte)((byte)priority << 7 | (byte)messageType << 2 | (extraBits & 0b00000011));
+            return (byte)((byte)priority << 7 | (byte)messageType << 3 | (extraBits & 0b00000111));
         }
 
         // Decoding the header byte
         public static (MessageType, MessagePriority, byte) DecodeHeader(byte header)
         {
             MessagePriority priority = (MessagePriority)(header >> 7);
-            MessageType messageType = (MessageType)((header >> 2) & 0b00011111);
-            byte extraBits = (byte)(header & 0b00000011);
+            MessageType messageType = (MessageType)((header >> 3) & 0b00001111);
+            byte extraBits = (byte)(header & 0b00000111);
             return (messageType, priority, extraBits);
         }
+
 
         // Serialize the message object to a byte array with MessagePack
         public static byte[] SerializeMessage<T>(T message)
