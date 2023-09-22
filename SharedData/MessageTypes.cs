@@ -21,13 +21,13 @@
         // Communication
         ChatMessage = 10,  // 1010
         ChatCommand = 11,  // 1011
+        ChatAcknowledgement = 12,  // 1100
 
         // Error
-        Error = 12,  // 1100
+        Error = 13,  // 1101
 
         // Reserved
-        res2 = 13,  // 1101
-        res3 = 14,  // 1110
+        Acknowledgement = 14,  // 1110
         res4 = 15,  // 1111
     }
 

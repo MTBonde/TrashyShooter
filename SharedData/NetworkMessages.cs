@@ -148,7 +148,7 @@ namespace SharedData
         [Key(2)] 
         public string? UserName;
         [Key(3)] 
-        public DateTime time;
+        public DateTime Time;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ChatMessage;
         public override bool PriorityMessage { get; set; } = true;
@@ -163,13 +163,39 @@ namespace SharedData
         [Key(2)] 
         public string? UserName;
         [Key(3)] 
-        public DateTime time;
+        public DateTime Time;
         [Key(4)] 
         public string? TargetName;
         [Key(5)] 
         public string? Message;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ChatCommand;
+        public override bool PriorityMessage { get; set; } = true;
+    }
+
+    public class ChatAcknowledgement : NetworkMessage
+    {
+        [Key(1)]
+        public byte playerID;
+        [Key(2)]
+        public MessageType OriginalMessageType;
+        [Key(3)]
+        public Guid MessageId;
+        [IgnoreMember]
+        public override MessageType MessageType => MessageType.ChatAcknowledgement;
+        public override bool PriorityMessage { get; set; } = true;
+    }
+    
+    public class Acknowledgement : NetworkMessage
+    {
+        [Key(1)]
+        public byte playerID;
+        [Key(2)]
+        public MessageType OriginalMessageType;
+        [Key(3)]
+        public Guid MessageId;
+        [IgnoreMember]
+        public override MessageType MessageType => MessageType.Acknowledgement;
         public override bool PriorityMessage { get; set; } = true;
     }
 }

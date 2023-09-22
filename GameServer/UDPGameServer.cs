@@ -16,7 +16,6 @@ namespace GameServer
         private IPEndPoint endPoint;
 
         private MessageHandler messageHandler;
-        private MessageSender messageSender;
         private ClientManager clientManager;
 
         private ConcurrentDictionary<byte, IPEndPoint> clients = new ConcurrentDictionary<byte, IPEndPoint>();
@@ -34,7 +33,6 @@ namespace GameServer
             endPoint = new IPEndPoint(IPAddress.Any, port);
 
             messageHandler = new MessageHandler(clients);
-            messageSender = new MessageSender(udpServer, clientManager);
             clientManager = new ClientManager();
         }
 
