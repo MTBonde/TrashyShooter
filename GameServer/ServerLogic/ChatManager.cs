@@ -39,7 +39,7 @@ namespace GameServer
                 if(messageInfo.Priority == MessagePriority.High)
                 {
                     // Sends an acknowledgment for high-priority messages
-                    await MessageSender.SendAcknowledgment(playerID, MessageType.ChatMessage);
+                    // TODO: ACKID await MessageSender.SendAcknowledgment(playerID, MessageType.ChatMessage, messageId);
                 }
             }
             await Task.CompletedTask;

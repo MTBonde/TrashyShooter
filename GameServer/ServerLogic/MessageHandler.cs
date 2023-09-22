@@ -43,12 +43,7 @@ namespace GameServer
         {
             (object message, MessageType messageType, MessagePriority messagePriority) = NetworkMessageProtocol.ReceiveNetworkMessage(receivedData);
 
-            // Generate a Guid to track the message
-            Guid messageId = Guid.NewGuid();
-            
-
-            // Track the message for acknowledgment
-            MessageSender.TrackMessage(message, messageType, messagePriority, playerID, messageId);
+           
 
             if(messageHandlers.TryGetValue(messageType, out MessageHandlerDelegate handler))
             {
@@ -60,7 +55,7 @@ namespace GameServer
                 // Send acknowledgment if the message is high priority
                 if(messagePriority == MessagePriority.High)
                 {
-                    await MessageSender.SendAcknowledgment(playerID, messageType, messageId);
+                    // TODO: ACK ID await MessageSender.SendAcknowledgment(playerID, messageType, messageId);
                 }
             }
             else
