@@ -9,10 +9,12 @@ namespace GameServer
     public class MessageSender
     {
         private UdpClient udpServer;
-        
-        public MessageSender(UdpClient udpServer)
+        private ClientManager clientManager;  
+
+        public MessageSender(UdpClient udpServer, ClientManager clientManager)
         {
             this.udpServer = udpServer;
+            this.clientManager = clientManager;
         }
 
         /// <summary>
@@ -32,5 +34,28 @@ namespace GameServer
             await udpServer.SendAsync(networkMessage.MessageBytes, networkMessage.Length, networkMessage.ClientEP);
         }
 
+        // Send to all clients
+        public async Task SendDataToClients(object message, MessageType messageType, MessagePriority priority)
+        {
+            // Use the ClientManager to get the client list
+            var clients = clientManager.GetClients();  
+            foreach(var client in clients)
+            {
+                await SendAsync(message, messageType, priority, client.Value);
+            }
+        }
+
+        public async Task SendDataToClientsExceptOne(object message, MessageType messageType, MessagePriority priority, byte exceptionID)
+        {
+            // Use the ClientManager to get the client list
+            var clients = clientManager.GetClients(); 
+            foreach(var client in clients)
+            {
+                if(client.Key != exceptionID)
+                {
+                    await SendAsync(message, messageType, priority, client.Value);
+                }
+            }
+        }
     }
 }

@@ -8,8 +8,7 @@ using MessagePack;
 
 namespace SharedData
 {
-    public class NetworkMessages
-    {
+    
         [MessagePackObject]
         public abstract class NetworkMessage
         {
@@ -136,6 +135,5 @@ namespace SharedData
             public float length;
             [IgnoreMember]
             public override MessageType MessageType => MessageType.LaserShot;
-        }
-    }
+        }    
 }

@@ -16,6 +16,8 @@ namespace GameServer
         private IPEndPoint endPoint;
 
         private MessageHandler messageHandler;
+        private MessageSender messageSender;
+        private ClientManager clientManager;
 
         private ConcurrentDictionary<byte, IPEndPoint> clients = new ConcurrentDictionary<byte, IPEndPoint>();
         private byte nextAvailableID = 0;
@@ -32,73 +34,71 @@ namespace GameServer
             endPoint = new IPEndPoint(IPAddress.Any, port);
 
             messageHandler = new MessageHandler(clients);
+            messageSender = new MessageSender(udpServer, clientManager);
+            clientManager = new ClientManager();
         }
-                
+
         /// <summary>
         /// Asynchronous method for starting the server
         /// </summary>
         /// <returns></returns>
         public async Task StartAsync()
         {
+            IPEndPoint RemoteEndPoint = null;  
             Console.WriteLine("Server startet.");
             while(true)
             {
-                var result = await udpServer.ReceiveAsync();
-
-                // Tilføj logik for at bestemme spillerens ID baseret på result.RemoteEndPoint eller andre faktorer.
-                byte playerID = DeterminePlayerID(result.RemoteEndPoint);
-
-                // Brug MessageHandler til at håndtere den modtagne besked
-                await messageHandler.HandleIncomingMessage(result.Buffer, playerID);
-            }
-        }
-
-        /// <summary>
-        /// Find byte id på klienten ved hjælp af ip.
-        /// Bruger queue til at genbruge numre
-        /// </summary>
-        /// <param name="clientEndPoint"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        private byte DeterminePlayerID(IPEndPoint clientEndPoint)
-        {
-            // Sikrer, at kun én tråd ad gangen kan udføre denne kodeblok.
-            lock(lockObject)
-            {
-                // Guard Clause: Hvis klienten allerede findes, returnerer vi deres eksisterende ID og afslutter metoden.
-                if(clients.Values.Contains(clientEndPoint))
+                try
                 {
-                    // Hvis klienten allerede findes, anvender vi LINQ til at søge i 'clients' ordbogen for at finde den første nøgleværdi-par,
-                    // hvor værdien (IPEndPoint) matcher 'clientEndPoint'. Derefter tager vi nøglen (spillerens ID) fra det fundne par.                    
-                    return clients.FirstOrDefault(x => x.Value.Equals(clientEndPoint)).Key;
+                    // Forsøger at modtage en besked fra en UDP-server.
+                    var result = await udpServer.ReceiveAsync();
+
+                    // Bestemmer spillerens ID baseret på den modtagne besked.
+                    byte playerID = clientManager.DeterminePlayerID(result.RemoteEndPoint); 
+                    
+
+                    // Håndterer den modtagne besked ved hjælp af MessageHandler.
+                    await messageHandler.HandleIncomingMessage(result.Buffer, playerID);
+
+                    
+
                 }
-
-                // Tildeler det næste tilgængelige ID til den nye klient
-                byte newPlayerID = nextAvailableID;
-
-                // Tilføjer den nye klient og deres ID til ordbogen
-                clients.TryAdd(newPlayerID, clientEndPoint);
-
-                // Opdaterer det næste tilgængelige ID
-                nextAvailableID++;
-
-                // Håndterer udmattelse af ID'er, hvis vi når til den maksimale værdi af byte
-                if(nextAvailableID == 0)
+                catch(Exception e)
                 {
-                    // Guard Clause: Hvis der er genbrugelige ID'er, brug et og returnér.
-                    if(reusableIDs.Count > 0)
+                    // Generel fejlhåndtering.
+                    // finder typen af den fangede exception.
+                    string exceptionType = e.GetType().ToString();
+
+                    // Udskriver beskeden og typen af exception.
+                    Console.WriteLine($"!ERROR! An unexpected error occurred: {e.Message}. Exception Type: {exceptionType}");
+
+                    // Guard clause for non-SocketException types
+                    if(!(e is SocketException))
                     {
-                        return reusableIDs.Dequeue();
+                        return;
                     }
 
-                    // Guard Clause: Hvis vi er nået hertil, har vi udmattet vores ID-pulje. Kast en undtagelse.
-                    throw new InvalidOperationException("Ran out of available client IDs");
-                }
-                // Returnerer det tildelte ID for den nye klient
-                return newPlayerID;
+                    // Log SocketException
+                    Console.WriteLine($"Socket Exception: {e.Message}");
+
+                    // Guard clause for null capturedEndPoint
+                    if(RemoteEndPoint == null)
+                    {
+                        return;
+                    }
+
+                    // Håndter den fangede socketexception
+                    clientManager.HandleClientLeftUnexpectedly((SocketException)e, RemoteEndPoint);
+                }                
             }
         }
 
+
+
+       
+
         // TODO:  game logic, client management,
+
+       
     }
 }

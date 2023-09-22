@@ -20,12 +20,12 @@
 
         // Communication
         Chat = 10,  // 1010
+        ChatCommand = 11,  // 1011
 
         // Error
-        Error = 11,  // 1011
+        Error = 12,  // 1100
 
         // Reserved
-        res1 = 12,  // 1100
         res2 = 13,  // 1101
         res3 = 14,  // 1110
         res4 = 15,  // 1111
