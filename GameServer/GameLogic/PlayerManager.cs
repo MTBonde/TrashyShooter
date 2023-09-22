@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Numerics;
 
 
@@ -109,12 +108,17 @@ namespace GameServer
             }
         }
 
+        public void RespawnPlayer(byte id)
+        {
+            RespawnPlayer(id, spawnPoint);
+        }
         /// <summary>
         /// Respawner en spiller ved spawn-punktet.
         /// </summary>
         /// <param name="id">Spillerens unikke ID.</param>
-        public void RespawnPlayer(byte id)
+        public void RespawnPlayer(byte id, Vector3 pos)
         {
+
             // Find spiller og nulstil deres tilstand
             PlayerInfo player = players[id];
             player.pos = spawnPoint;
@@ -127,6 +131,7 @@ namespace GameServer
             player.InvokeOnRespawn();
             player.InvokeOnHealthChanged();
             player.InvokeOnAmmoChanged();
+
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace GameServer
 {
     public class GameController
     {
-        private GameWorldManager world;
+        private GameWorldManager gameWorldManager;
         private SnapshotManager snapshotManager;
         private LagCompensationManager lagCompensationManager;
         private PlayerManager playerManager;
@@ -22,7 +23,57 @@ namespace GameServer
             this.snapshotManager = snapshotManager;
             this.lagCompensationManager = lagCompensationManager;
             this.playerManager = playerManager;
-            world = new GameWorldManager();
+
+            // Initialize GameWorldManager and subscribe to its events
+            gameWorldManager = new GameWorldManager();
+            SubscribeToGameWorldEvents();
+        }
+
+        private void SubscribeToGameWorldEvents()
+        {
+            // Subscribe to events
+            gameWorldManager.GameRoundStarted += OnGameRoundStarted;
+            gameWorldManager.GameRoundEnded += OnGameRoundEnded;
+            gameWorldManager.CountdownTick += OnCountdownTick;
+            gameWorldManager.CountdownStarted += OnCountdownStarted;
+        }
+
+        private void OnGameRoundStarted()
+        {
+            // Initialize Random class
+            Random random = new Random();
+
+            // Generate random coordinates within the range x = [-10, 10] and y = [-10, 10]
+            int randomX = random.Next(-10, 11);
+            int randomY = random.Next(-10, 11);
+
+            // Convert integers to Vector3
+            Vector3 respawnPosition = new Vector3(randomX, randomY, 0);
+
+            // Iterate over the dictionary and respawn each player
+            foreach(var entry in playerManager.players)
+            {
+                byte playerId = entry.Key;                
+
+                // Use the generated coordinates to respawn the player
+                playerManager.RespawnPlayer(playerId, respawnPosition);
+            }
+        }
+
+
+        private void OnGameRoundEnded()
+        {
+            
+        }
+
+        private void OnCountdownTick(int remainingTime)
+        {
+            
+        }
+
+        private void OnCountdownStarted(int countdown)
+        {
+            
         }
 
         public void HandleJoin(byte playerID, string playerName)
