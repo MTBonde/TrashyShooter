@@ -12,10 +12,10 @@ namespace GameServer
     public class ClientManager
     {
         // TODO: Clientmanager som singleton, med mindre det er tråd usikkert
-        public static ConcurrentDictionary<byte, IPEndPoint> clients = new ConcurrentDictionary<byte, IPEndPoint>();
+        public ConcurrentDictionary<byte, IPEndPoint> clients = new ConcurrentDictionary<byte, IPEndPoint>();
         private byte nextAvailableID = 0;
         private Queue<byte> reusableIDs = new Queue<byte>();
-        private readonly object lockObject = new object();
+        private readonly object lockObjectForID = new object();
 
         
 
@@ -34,7 +34,7 @@ namespace GameServer
         public byte DeterminePlayerID(IPEndPoint clientEndPoint)
         {
             // Sikrer, at kun én tråd ad gangen kan udføre denne kodeblok.
-            lock(lockObject)
+            lock(lockObjectForID)
             {
                 // Guard Clause: Hvis klienten allerede findes, returnerer vi deres eksisterende ID og afslutter metoden.
                 if(clients.Values.Contains(clientEndPoint))
@@ -102,7 +102,7 @@ namespace GameServer
             // Sender en besked til de andre klienter for at informere dem om frakoblingen.
             PlayerLeft playerLeftMessage = new PlayerLeft { playerID = keyOfLeftUser };
 
-            await SendDataToClients(playerLeftMessage, MessageType.PlayerLeft, MessagePriority.Low);            
+            // TODO: FIX DENNE !! await SendDataToClients(playerLeftMessage, MessageType.PlayerLeft, MessagePriority.Low);            
 
             Console.WriteLine("send player left message to rest of Clients");
 

@@ -19,7 +19,7 @@
         LaserShot = 9,  // 1001
 
         // Communication
-        Chat = 10,  // 1010
+        ChatMessage = 10,  // 1010
         ChatCommand = 11,  // 1011
 
         // Error
@@ -35,5 +35,12 @@
     {
         Low = 0,
         High = 1
+    }
+
+    public enum Commands
+    {
+        List, 
+        All, 
+        Direct
     }
 }

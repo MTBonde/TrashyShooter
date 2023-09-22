@@ -3,7 +3,7 @@
     class Program
     {
 
-        public static async void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             // Create a new UDPGameServer instance with port 8080.
             UDPGameServer gameServer = new UDPGameServer(8080);

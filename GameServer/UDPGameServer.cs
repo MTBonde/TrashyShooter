@@ -11,7 +11,7 @@ namespace GameServer
     public class UDPGameServer
     {
         // UDP client to manage incoming and outgoing data.
-        private UdpClient udpServer;
+        public UdpClient udpServer;
         // IPEndPoint to store client info.
         private IPEndPoint endPoint;
 
@@ -92,13 +92,5 @@ namespace GameServer
                 }                
             }
         }
-
-
-
-       
-
-        // TODO:  game logic, client management,
-
-       
     }
 }
