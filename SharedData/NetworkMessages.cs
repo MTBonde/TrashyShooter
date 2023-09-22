@@ -143,9 +143,12 @@ namespace SharedData
     public class ChatMessage : NetworkMessage
     {
         
-        [Key(1)] public string? Message;
-        [Key(2)] public string? UserName;
-        [Key(3)] public DateTime time;
+        [Key(1)] 
+        public string? Message;
+        [Key(2)] 
+        public string? UserName;
+        [Key(3)] 
+        public DateTime time;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ChatMessage;
         public override bool PriorityMessage { get; set; } = true;
@@ -155,11 +158,16 @@ namespace SharedData
     public class ChatCommand : NetworkMessage
     {
         
-        [Key(1)] public Commands Command;
-        [Key(2)] public string? UserName;
-        [Key(3)] public DateTime time;
-        [Key(4)] public string? TargetName;
-        [Key(5)] public string? Message;
+        [Key(1)] 
+        public Commands Command;
+        [Key(2)] 
+        public string? UserName;
+        [Key(3)] 
+        public DateTime time;
+        [Key(4)] 
+        public string? TargetName;
+        [Key(5)] 
+        public string? Message;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ChatCommand;
         public override bool PriorityMessage { get; set; } = true;
