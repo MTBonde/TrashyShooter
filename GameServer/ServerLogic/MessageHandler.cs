@@ -39,10 +39,7 @@ namespace GameServer
                 { MessageType.PlayerUpdate, HandlePlayerUpdate },
                 { MessageType.PlayerSnapShot, HandlePlayerSnapShot },
                // { MessageType.PlayerInfoUpdate, HandlePlayerInfoUpdate },
-                //{ MessageType.LaserShot, HandleLaserShot },
-              //  { MessageType.ChatMessage, HandleChatMessage },
-                //{ MessageType.ChatCommand, HandleChatCommand },
-                //{ MessageType.ChatAcknowledgement, HandleChatAcknowledgement },
+                //{ MessageType.LaserShot, HandleLaserShot },              
                 //{ MessageType.Error, HandleError },
                 { MessageType.Acknowledgement, HandleAcknowledgement },
                 //{ MessageType.res4, Handleres4 }
