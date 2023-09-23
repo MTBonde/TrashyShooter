@@ -9,14 +9,14 @@ using SharedData;
 
 namespace GameServer
 {
-    public class GameController
+    public class GameLogicController
     {
         private GameWorldManager gameWorldManager;
         private SnapshotManager snapshotManager;
         private LagCompensationManager lagCompensationManager;
         private PlayerManager playerManager;
 
-        public GameController(SnapshotManager snapshotManager,
+        public GameLogicController(SnapshotManager snapshotManager,
                               LagCompensationManager lagCompensationManager,
                               PlayerManager playerManager)
         {

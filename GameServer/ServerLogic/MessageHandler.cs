@@ -19,8 +19,11 @@ namespace GameServer
 
         private ConcurrentDictionary<byte, IPEndPoint> clients;
 
-        public MessageHandler(ConcurrentDictionary<byte, IPEndPoint> clients)
+        private readonly GameLogicController gameLogicController;
+
+        public MessageHandler(GameLogicController gameLogicController, ConcurrentDictionary<byte, IPEndPoint> clients)
         {
+            this.gameLogicController = gameLogicController;
             this.clients = clients;
             // Initialiser messageHandlers ordbogen
             messageHandlers = new Dictionary<MessageType, MessageHandlerDelegate>
@@ -72,19 +75,25 @@ namespace GameServer
         {
             Console.WriteLine($"Klient med ID {playerID} har tilsluttet sig.");
 
+            // Opretter en ny Join-objekt for at håndtere spillerens indtræden i spillet
             Join join = new Join();
 
-            // Delegate to GameController
-            //TODO: GCL gameLogicController.HandleJoin(playerID, join.playerName);
+            // delegeret til GameController
+            gameLogicController.HandleJoin(playerID, join.playerName);
 
+            // Opretter et svar og en besked om, at en ny spiller er kommet ind i spillet
             JoinAnswer answer = new JoinAnswer { playerID = playerID };
             PlayerJoined playerJoined = new PlayerJoined { playerID = playerID };
+                     
+            // Finder klientens IPEndPoint fra ConcurrentDictionary
+            if(clients.TryGetValue(playerID, out IPEndPoint thisClientEndPoint))
+            {
+                // Sender svar til klienten
+                await MessageSender.SendAsync(answer, MessageType.ClientJoinAnswer, MessagePriority.High, thisClientEndPoint);
+            }
 
-
-
-            // TODO: MESSAGSENDER await SendDataToClientAsync(answer, playerID);
-            // TODO: MESSAGSENDER await SendDataToClientsExceptOne(playerJoined, playerID);
-            // TODO: MESSAGSENDER await NotifyOtherClients(playerID, thisClientEndPoint);
+            await MessageSender.SendDataToClientsExceptOne(playerJoined, MessageType.PlayerJoined, MessagePriority.Low, playerID);
+            await MessageSender.NotifyOtherClients(playerID, thisClientEndPoint);
 
             await Task.CompletedTask;
         }

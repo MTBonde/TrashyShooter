@@ -18,6 +18,8 @@ namespace SharedData
     {
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ClientHasJoined;
+        [Key(1)]
+        public string playerName;
         public override bool PriorityMessage { get; set; } = true;
     }
 

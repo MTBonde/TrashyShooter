@@ -65,6 +65,35 @@ namespace GameServer
             }
         }
 
+        /// <summary>
+        /// Notificerer andre klienter, når en spiller deltager i spillet.
+        /// </summary>
+        /// <param name="playerID">Den deltagerende spillers ID.</param>
+        /// <param name="thisClientEndPoint">Den deltagerende spillers ip.</param>
+        public static async Task NotifyOtherClients(byte playerID, IPEndPoint thisClientEndPoint)
+        {
+            // Opretter en PlayerJoined besked
+            PlayerJoined playerJoined = new PlayerJoined();
+
+            // Henter alle klienter fra ClientManager
+            ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
+
+            // Går igennem alle klienter
+            foreach(KeyValuePair<byte, IPEndPoint> client in clients)
+            {
+                // Indstiller playerID for beskeden
+                playerJoined.playerID = client.Key;
+
+                // Tjekker om klienten er den samme som den, der netop har tilsluttet
+                if(client.Value != thisClientEndPoint)
+                {
+                    // Sender beskeden til de andre klienter
+                    await SendAsync(playerJoined, MessageType.PlayerJoined, MessagePriority.Low, client.Value);
+                }
+            }
+        }
+
+
         public static async Task SendAcknowledgment(byte playerID, MessageType originalMessageType, Guid messageId)
         {
             ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
