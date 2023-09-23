@@ -26,7 +26,7 @@ namespace SharedData
     public class Leave : NetworkMessage
     {
         [IgnoreMember]
-        public override MessageType MessageType => MessageType.ClientHasJoined;
+        public override MessageType MessageType => MessageType.ClientHasLeft;
         public override bool PriorityMessage { get; set; } = false;
     }
 
