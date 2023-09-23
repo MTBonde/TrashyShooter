@@ -75,7 +75,10 @@ namespace GameServer
         /// <returns>A Task representing the asynchronous operation.</returns>
         public static async Task SendAsync(object message, MessageType messageType, MessagePriority priority, IPEndPoint clientEP)
         {
+            // Bruger NetworkMessageProtocol til at lave en samlet serialiseret netværksbesked
             (byte[] MessageBytes, int Length, IPEndPoint ClientEP) networkMessage = NetworkMessageProtocol.SendNetworkMessage(message, messageType, priority, clientEP);
+
+            // Sender den samlede netværksbesked via UDP
             await udpServer.SendAsync(networkMessage.MessageBytes, networkMessage.Length, networkMessage.ClientEP);
         }
 

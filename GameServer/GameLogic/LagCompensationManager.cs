@@ -63,7 +63,8 @@ namespace GameServer
             laserShot.rotZ = update.rotZ;
             laserShot.rotY = update.rotY;
             laserShot.length = Vector3.Distance(playersCurrentInfo.pos, colInfo.collisionPoint);
-            // TODO MESSAGESENDER await Server.SendDataToClientsExceptOne(laserShot, playersCurrentInfo.id);
+            await MessageSender.SendDataToClientsExceptOne(laserShot, MessageType.LaserShot, MessagePriority.Low, playersCurrentInfo.id);
+
 
             // Guard clause: Hvis vi ikke ramte noget, opdater ammo og send "missed" besked
             if(colInfo.playerID == null)

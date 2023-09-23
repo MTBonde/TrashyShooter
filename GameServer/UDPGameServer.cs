@@ -18,6 +18,9 @@ namespace GameServer
         private MessageHandler messageHandler;
         private ClientManager clientManager;
         private GameLogicController controller;
+        private SnapshotManager snapshotManager;
+        private GameWorldManager worldManager;
+        private PlayerManager playerManager;
 
         private ConcurrentDictionary<byte, IPEndPoint> clients = new ConcurrentDictionary<byte, IPEndPoint>();
         private byte nextAvailableID = 0;
@@ -33,7 +36,7 @@ namespace GameServer
             // Initialize IPEndPoint to capture client data.
             endPoint = new IPEndPoint(IPAddress.Any, port);
 
-            messageHandler = new MessageHandler(controller, clients);
+            messageHandler = new MessageHandler(controller, snapshotManager, clients);
             clientManager = new ClientManager();
         }
 
