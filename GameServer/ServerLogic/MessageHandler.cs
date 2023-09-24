@@ -102,7 +102,10 @@ namespace GameServer
             if(clients.TryGetValue(playerID, out IPEndPoint thisClientEndPoint))
             {
                 // Sender svar til klienten
-                await MessageSender.SendAsync(answer, MessageType.ClientJoinAnswer, MessagePriority.High, thisClientEndPoint);
+                await MessageSender.SendAsync(answer,
+                                              MessageType.ClientJoinAnswer,
+                                              MessagePriority.High,
+                                              thisClientEndPoint);
             }
 
             await MessageSender.SendDataToClientsExceptOne(playerJoined, MessageType.PlayerJoined, MessagePriority.Low, playerID);

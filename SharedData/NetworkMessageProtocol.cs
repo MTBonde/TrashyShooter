@@ -84,7 +84,10 @@ namespace SharedData
         /// <param name="priority">Priority level of the message.</param>
         /// <param name="clientEP">Client endpoint.</param>
         /// <returns>A tuple containing the message bytes, the length of the message, and the client endpoint.</returns>
-        public static (byte[] MessageBytes, int Length, IPEndPoint ClientEP) SendNetworkMessage(object message, MessageType messageType, MessagePriority priority, IPEndPoint clientEP)
+        public static (byte[] MessageBytes, int Length, IPEndPoint ClientEP) SendNetworkMessage(object message,
+                                                                                                MessageType messageType,
+                                                                                                MessagePriority priority,
+                                                                                                IPEndPoint clientEP)
         {
             // Trin 1: Koder headeren
             byte header = EncodeHeader(messageType, priority, 0);  // extraBits sat til 0 for nu, men hvad skal der ske med dem?

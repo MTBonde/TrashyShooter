@@ -24,46 +24,7 @@ namespace GameServer
             }
         }
 
-        //public static byte[] SerializeMessageByType(object message, MessageType messageType)
-        //{
-        //    switch(messageType)
-        //    {
-        //        case MessageType.ClientHasJoined:
-        //            return NetworkMessageProtocol.SerializeMessage((Join)message); 
-        //        case MessageType.ClientJoinAnswer:
-        //            return NetworkMessageProtocol.SerializeMessage((JoinAnswer)message);
-        //        case MessageType.ClientHasLeft:
-        //            return NetworkMessageProtocol.SerializeMessage((Leave)message);
-        //        //case MessageType.Heartbeat:
-        //        //    break;
-        //        case MessageType.PlayerJoined:
-        //            return NetworkMessageProtocol.SerializeMessage((PlayerJoined)message);
-        //        case MessageType.PlayerLeft:
-        //            return NetworkMessageProtocol.SerializeMessage((PlayerLeft)message); ;
-        //        case MessageType.PlayerUpdate:
-        //            return NetworkMessageProtocol.SerializeMessage((PlayerUpdate)message); ;
-        //        case MessageType.PlayerSnapShot:
-        //            return NetworkMessageProtocol.SerializeMessage((PlayerSnapShot)message); ;
-        //        case MessageType.PlayerInfoUpdate:
-        //            return NetworkMessageProtocol.SerializeMessage((PlayerInfoUpdate)message); ;
-        //        case MessageType.LaserShot:
-        //            return NetworkMessageProtocol.SerializeMessage((LaserShot)message); ;
-        //        //case MessageType.ChatMessage:
-        //        //    break;
-        //        //case MessageType.ChatCommand:
-        //        //    break;
-        //        //case MessageType.ChatAcknowledgement:
-        //        //    break;
-        //        //case MessageType.Error:
-        //        //    break;
-        //        //case MessageType.Acknowledgement:
-        //        //    break;
-        //        //case MessageType.res4:
-        //        //    break;
-        //        default:
-        //            return null;
-        //    }
-        //}
+        
 
         /// <summary>
         /// Asynchronously sends a message to a client using the specified message type and priority.
@@ -76,10 +37,15 @@ namespace GameServer
         public static async Task SendAsync(object message, MessageType messageType, MessagePriority priority, IPEndPoint clientEP)
         {
             // Bruger NetworkMessageProtocol til at lave en samlet serialiseret netværksbesked
-            (byte[] MessageBytes, int Length, IPEndPoint ClientEP) networkMessage = NetworkMessageProtocol.SendNetworkMessage(message, messageType, priority, clientEP);
+            (byte[] MessageBytes, int Length, IPEndPoint ClientEP) networkMessage = NetworkMessageProtocol.SendNetworkMessage(message,
+                                                                                                                              messageType,
+                                                                                                                              priority,
+                                                                                                                              clientEP);
 
             // Sender den samlede netværksbesked via UDP
-            await udpServer.SendAsync(networkMessage.MessageBytes, networkMessage.Length, networkMessage.ClientEP);
+            await udpServer.SendAsync(networkMessage.MessageBytes,
+                                      networkMessage.Length,
+                                      networkMessage.ClientEP);
         }
 
 
