@@ -107,7 +107,7 @@ namespace GameServer
         {
             ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
             // Declare as object to handle different acknowledgment types
-            object acknowledgmentMessage;
+            NetworkMessage acknowledgmentMessage;
             if(originalMessageType == MessageType.ChatMessage || originalMessageType == MessageType.ChatCommand)
             {
                 // Create a chat-specific acknowledgment message
