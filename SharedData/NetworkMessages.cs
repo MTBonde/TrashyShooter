@@ -11,7 +11,7 @@ namespace SharedData
         [IgnoreMember]
         public byte GetMessageTypeAsByte => (byte)MessageType;
         [Key(0)]
-        public abstract bool PriorityMessage { get; set; }
+        public bool PriorityMessage { get; set; }
     }
 
     [MessagePackObject]
@@ -19,9 +19,9 @@ namespace SharedData
     {
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ClientHasJoined;
+        //public override bool PriorityMessage { get; set; } = true;
         [Key(1)]
         public string playerName;
-        public override bool PriorityMessage { get; set; } = true;
     }
 
     [MessagePackObject]
@@ -29,7 +29,7 @@ namespace SharedData
     {
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ClientHasLeft;
-        public override bool PriorityMessage { get; set; } = false;
+        //public override bool PriorityMessage { get; set; } = false;
     }
 
     [MessagePackObject]
@@ -39,7 +39,7 @@ namespace SharedData
         public byte playerID;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ClientJoinAnswer;
-        public override bool PriorityMessage { get; set; } = false;
+        //public override bool PriorityMessage { get; set; } = false;
     }
 
     [MessagePackObject]
@@ -49,7 +49,7 @@ namespace SharedData
         public byte playerID;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerJoined;
-        public override bool PriorityMessage { get; set; } = false;
+        //public override bool PriorityMessage { get; set; } = false;
     }
 
     [MessagePackObject]
@@ -59,7 +59,7 @@ namespace SharedData
         public byte playerID;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerLeft;
-        public override bool PriorityMessage { get; set; } = false;
+        //public override bool PriorityMessage { get; set; } = false;
     }
 
     [MessagePackObject]
@@ -83,7 +83,7 @@ namespace SharedData
         public int ammo;    // Added ammo property
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerSnapShot;
-        public override bool PriorityMessage { get; set; } = false;
+        //public override bool PriorityMessage { get; set; } = false;
     }
 
     [MessagePackObject]
@@ -111,7 +111,7 @@ namespace SharedData
         public float rotY;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerUpdate;
-        public override bool PriorityMessage { get; set; } = false;
+        //public override bool PriorityMessage { get; set; } = false;
     }
 
     [MessagePackObject]
@@ -125,7 +125,7 @@ namespace SharedData
         public int points;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerInfoUpdate;
-        public override bool PriorityMessage { get; set; } = false;
+        //public override bool PriorityMessage { get; set; } = false;
     }
 
     [MessagePackObject]
@@ -147,7 +147,7 @@ namespace SharedData
         public float length;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.LaserShot;
-        public override bool PriorityMessage { get; set; } = false;
+        //public override bool PriorityMessage { get; set; } = false;
     }
 
     [MessagePackObject]
@@ -162,7 +162,7 @@ namespace SharedData
         public DateTime Time;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ChatMessage;
-        public override bool PriorityMessage { get; set; } = true;
+        //public override bool PriorityMessage { get; set; } = true;
     }
 
     [MessagePackObject]
@@ -181,7 +181,7 @@ namespace SharedData
         public string? Message;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ChatCommand;
-        public override bool PriorityMessage { get; set; } = true;
+        //public override bool PriorityMessage { get; set; } = true;
     }
 
     [MessagePackObject]
@@ -195,7 +195,7 @@ namespace SharedData
         public Guid MessageId;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ChatAcknowledgement;
-        public override bool PriorityMessage { get; set; } = true;
+        //public override bool PriorityMessage { get; set; } = true;
     }
 
     [MessagePackObject]
@@ -209,6 +209,6 @@ namespace SharedData
         public Guid MessageId;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.Acknowledgement;
-        public override bool PriorityMessage { get; set; } = true;
+        //public override bool PriorityMessage { get; set; } = true;
     }
 }
