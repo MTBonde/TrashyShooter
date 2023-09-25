@@ -9,7 +9,7 @@ namespace GameServer
     {
         // Delegeret til håndtering af beskeder
         //public delegate Task MessageHandlerDelegate(byte[] dataToDeserialize, byte playerID);
-        public delegate Task MessageHandlerDelegate((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID);
+        public delegate Task MessageHandlerDelegate((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID);
 
         private const int SnapShotSpeed = 30;
 
@@ -31,7 +31,6 @@ namespace GameServer
             messageHandlers = new Dictionary<MessageType, MessageHandlerDelegate>
             {
                 { MessageType.ClientHasJoined, HandleClientHasJoined },
-                { MessageType.ClientJoinAnswer, HandleClientJoinAnswer },
                 { MessageType.ClientHasLeft, HandleClientHasLeft },
                // { MessageType.Heartbeat, HandleHeartbeat },
               //  { MessageType.PlayerJoined, HandlePlayerJoined },
@@ -57,13 +56,13 @@ namespace GameServer
 
         public async Task HandleIncomingMessage(byte[] receivedData, byte playerID)
         {
-            (object message, MessageType messageType, MessagePriority messagePriority) = NetworkMessageProtocol.ReceiveNetworkMessage(receivedData);
+            (NetworkMessage message, MessageType messageType, MessagePriority messagePriority) = NetworkMessageProtocol.ReceiveNetworkMessage(receivedData);
 
 
 
             if(messageHandlers.TryGetValue(messageType, out MessageHandlerDelegate handler))
             {
-                Console.WriteLine($"Received message of type {messageType} from player {playerID}");
+                //Console.WriteLine($"Received message of type {messageType} from player {playerID}");
 
                 // Process the message
                 await handler((message, messageType, messagePriority), playerID);
@@ -84,7 +83,7 @@ namespace GameServer
 
 
         // beskedhåndteringsmetoder
-        private async Task HandleClientHasJoined((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        private async Task HandleClientHasJoined((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             Console.WriteLine($"Klient med ID {playerID} har tilsluttet sig.");
 
@@ -114,14 +113,7 @@ namespace GameServer
             await Task.CompletedTask;
         }
 
-        private async Task HandleClientJoinAnswer((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
-        {
-            // TODO: ?Skal vi kunne modtage et svar?
-            Console.WriteLine($"Klient med ID {playerID} har modtaget et svar om deltagelse.");
-            await Task.CompletedTask;
-        }
-
-        private async Task HandleClientHasLeft((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        private async Task HandleClientHasLeft((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Deserialiser dataene til en PlayerLeft-objekt
             Leave clientHasLeft = new();
@@ -133,7 +125,7 @@ namespace GameServer
             await MessageSender.SendDataToClients(clientHasLeft, MessageType.ClientHasLeft, MessagePriority.Low);
         }
 
-        public async Task HandlePlayerLeft((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        public async Task HandlePlayerLeft((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Deserialiser dataene til en PlayerLeft-objekt
             PlayerLeft playerleft = new();
@@ -145,7 +137,7 @@ namespace GameServer
             await MessageSender.SendDataToClients(playerleft, MessageType.PlayerLeft, MessagePriority.Low);
         }
 
-        private async Task HandlePlayerUpdate((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        private async Task HandlePlayerUpdate((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             PlayerUpdate update = new();
 
@@ -156,7 +148,7 @@ namespace GameServer
         // Felt til at stoppe timer-loopet
         private bool stopTimer = false;
 
-        private async Task HandlePlayerSnapShot((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        private async Task HandlePlayerSnapShot((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Reset stop flag
             stopTimer = false;
@@ -201,7 +193,7 @@ namespace GameServer
 
 
 
-        private async Task HandleAcknowledgement((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        private async Task HandleAcknowledgement((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Try to cast the incoming message to Acknowledgement. If it fails, ack will be null.
             Acknowledgement ack = messageInfo.Message as Acknowledgement;

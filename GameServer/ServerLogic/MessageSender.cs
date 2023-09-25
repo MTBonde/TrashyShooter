@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Channels;
 
 using SharedData;
 
@@ -34,7 +35,7 @@ namespace GameServer
         /// <param name="priority">The priority level of the message.</param>
         /// <param name="clientEP">The endpoint of the client to send the message to.</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        public static async Task SendAsync(object message, MessageType messageType, MessagePriority priority, IPEndPoint clientEP)
+        public static async Task SendAsync(NetworkMessage message, MessageType messageType, MessagePriority priority, IPEndPoint clientEP)
         {
             // Bruger NetworkMessageProtocol til at lave en samlet serialiseret netværksbesked
             (byte[] MessageBytes, int Length, IPEndPoint ClientEP) networkMessage = NetworkMessageProtocol.SendNetworkMessage(message,
@@ -50,7 +51,7 @@ namespace GameServer
 
 
         // Send to all clients
-        public static async Task SendDataToClients(object message, MessageType messageType, MessagePriority priority)
+        public static async Task SendDataToClients(NetworkMessage message, MessageType messageType, MessagePriority priority)
         {
             // Use the ClientManager to get the client list
             ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
@@ -60,7 +61,7 @@ namespace GameServer
             }
         }
 
-        public static async Task SendDataToClientsExceptOne(object message, MessageType messageType, MessagePriority priority, byte exceptionID)
+        public static async Task SendDataToClientsExceptOne(NetworkMessage message, MessageType messageType, MessagePriority priority, byte exceptionID)
         {
             // Use the ClientManager to get the client list
             ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
@@ -144,14 +145,14 @@ namespace GameServer
         // Structure to hold message information
         public struct UnacknowledgedMessageInfo
         {
-            public object Message;
+            public NetworkMessage Message;
             public MessageType Type;
             public MessagePriority Priority;
             public IPEndPoint ClientEP;
             public DateTime Timestamp;
             public byte ClientID;  
 
-            public UnacknowledgedMessageInfo(object message, MessageType type, MessagePriority priority, IPEndPoint clientEP, DateTime timestamp, byte clientId)
+            public UnacknowledgedMessageInfo(NetworkMessage message, MessageType type, MessagePriority priority, IPEndPoint clientEP, DateTime timestamp, byte clientId)
             {
                 Message = message;
                 Type = type;
@@ -166,7 +167,7 @@ namespace GameServer
         public static ConcurrentDictionary<Guid, UnacknowledgedMessageInfo> unacknowledgedMessages = new ConcurrentDictionary<Guid, UnacknowledgedMessageInfo>();
 
         // Method to add a message to the unacknowledged list
-        public static void TrackMessage(object message, MessageType type, MessagePriority priority, IPEndPoint clientEP, byte clientId)
+        public static void TrackMessage(NetworkMessage message, MessageType type, MessagePriority priority, IPEndPoint clientEP, byte clientId)
         {
             Guid messageId = Guid.NewGuid();  // Generate a unique ID for this message
             UnacknowledgedMessageInfo messageInfo = new UnacknowledgedMessageInfo(message, type, priority, clientEP, DateTime.UtcNow, clientId);

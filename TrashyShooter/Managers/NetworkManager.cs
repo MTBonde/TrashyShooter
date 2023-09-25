@@ -54,7 +54,7 @@ namespace MultiplayerEngine
 
             private void OnDataRecieved(byte[] receivedData)
             {
-                (object Message, MessageType Type, MessagePriority Priority) messageInfo = NetworkMessageProtocol.ReceiveNetworkMessage(receivedData);
+                (NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo = NetworkMessageProtocol.ReceiveNetworkMessage(receivedData);
                 NetworkMessage message;
                 switch (messageInfo.Type)
                 {

@@ -4,7 +4,7 @@ namespace GameServer
 {
     public class ChatManager
     {
-        public delegate Task MessageHandlerDelegate((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID);
+        public delegate Task MessageHandlerDelegate((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID);
 
         // Ordbog til at mappe MessageType til den tilsvarende beskedhåndterer
         private Dictionary<MessageType, MessageHandlerDelegate> chatMessageHandlers;
@@ -24,7 +24,7 @@ namespace GameServer
         }
 
         // Handles incoming chat message
-        private async Task HandleIncomingChatMessage((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        private async Task HandleIncomingChatMessage((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Tries to cast the incoming message to ChatMessage. If it fails, chatMessage will be null.
             ChatMessage chatMessage = messageInfo.Message as ChatMessage;
@@ -48,7 +48,7 @@ namespace GameServer
 
 
 
-        private async Task HandleIncomingChatCommand((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        private async Task HandleIncomingChatCommand((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Deserialize the incoming data into a NetworkMessageCommands object
             ChatCommand chatCommand = messageInfo.Message as ChatCommand;
@@ -97,7 +97,7 @@ namespace GameServer
             await Task.CompletedTask;
         }
 
-        private async Task HandleIncomingChatAcknowledgement((object Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        private async Task HandleIncomingChatAcknowledgement((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Try to cast the incoming message to ChatAcknowledgement. If it fails, chatAck will be null.
             ChatAcknowledgement chatAck = messageInfo.Message as ChatAcknowledgement;

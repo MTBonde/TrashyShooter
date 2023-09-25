@@ -15,15 +15,15 @@ namespace GameServer
         // IPEndPoint to store client info.
         private IPEndPoint endPoint;
 
+        private ClientManager clientManager = new();
         private MessageHandler messageHandler;
-        private ClientManager clientManager;
         private SnapshotManager snapshotManager = new SnapshotManager();
         private GameWorldManager worldManager;
         private PlayerManager playerManager = new PlayerManager();
         private LagCompensationManager lagCompensationManager;
         private GameLogicController controller;
 
-        private ConcurrentDictionary<byte, IPEndPoint> clients = new ConcurrentDictionary<byte, IPEndPoint>();
+        //private ConcurrentDictionary<byte, IPEndPoint> clients = new ConcurrentDictionary<byte, IPEndPoint>();
         private byte nextAvailableID = 0;
         // Låseobjekt til at sikre, at ID-generering er atomar.
         private readonly object lockObject = new object();
@@ -37,12 +37,14 @@ namespace GameServer
             // Initialize IPEndPoint to capture client data.
             endPoint = new IPEndPoint(IPAddress.Any, port);
 
+            MessageSender.Initialize(udpServer, clientManager);
+
             lagCompensationManager = new LagCompensationManager(snapshotManager);
 
             controller = new GameLogicController(snapshotManager, lagCompensationManager, playerManager);
 
-            messageHandler = new MessageHandler(controller, snapshotManager, clients);
-            clientManager = new ClientManager();
+            messageHandler = new MessageHandler(controller, snapshotManager, clientManager.clients);
+            //clientManager = new ClientManager();
         }
 
         /// <summary>

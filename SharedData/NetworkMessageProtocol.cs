@@ -84,7 +84,7 @@ namespace SharedData
         /// <param name="priority">Priority level of the message.</param>
         /// <param name="clientEP">Client endpoint.</param>
         /// <returns>A tuple containing the message bytes, the length of the message, and the client endpoint.</returns>
-        public static (byte[] MessageBytes, int Length, IPEndPoint ClientEP) SendNetworkMessage(object message,
+        public static (byte[] MessageBytes, int Length, IPEndPoint ClientEP) SendNetworkMessage(NetworkMessage message,
                                                                                                 MessageType messageType,
                                                                                                 MessagePriority priority,
                                                                                                 IPEndPoint clientEP)
@@ -109,7 +109,7 @@ namespace SharedData
         /// </summary>
         /// <param name="receivedBytes">The received byte array.</param>
         /// <returns>A tuple containing the decoded message, its type, and its priority.</returns>
-        public static (object Message, MessageType Type, MessagePriority Priority) ReceiveNetworkMessage(byte[] receivedBytes)
+        public static (NetworkMessage message, MessageType Type, MessagePriority Priority) ReceiveNetworkMessage(byte[] receivedBytes)
         {
             // Trin 1: Dekoder headeren
             // Headeren, som indeholder beskedtypen og prioritet, dekodes fra det første byte.
@@ -122,7 +122,7 @@ namespace SharedData
 
             // Trin 3: Dekoder beskedobjektet med MessagePack
             // Beskeden dekodes fra byte-array til objekt.
-            object message = MessagePackSerializer.Deserialize<object>(messageBytes);
+            NetworkMessage message = MessagePackSerializer.Deserialize<NetworkMessage>(messageBytes);
 
             // Returnerer en tuple med den dekodede besked, dens type og prioritet
             return (message, decodedMessageType, decodedPriority);
