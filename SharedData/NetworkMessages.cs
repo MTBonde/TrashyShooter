@@ -14,6 +14,7 @@ namespace SharedData
         public abstract bool PriorityMessage { get; set; }
     }
 
+    [MessagePackObject]
     public class Join : NetworkMessage
     {
         [IgnoreMember]
@@ -23,6 +24,7 @@ namespace SharedData
         public override bool PriorityMessage { get; set; } = true;
     }
 
+    [MessagePackObject]
     public class Leave : NetworkMessage
     {
         [IgnoreMember]
@@ -30,6 +32,7 @@ namespace SharedData
         public override bool PriorityMessage { get; set; } = false;
     }
 
+    [MessagePackObject]
     public class JoinAnswer : NetworkMessage
     {
         [Key(1)]
@@ -39,6 +42,7 @@ namespace SharedData
         public override bool PriorityMessage { get; set; } = false;
     }
 
+    [MessagePackObject]
     public class PlayerJoined : NetworkMessage
     {
         [Key(1)]
@@ -48,6 +52,7 @@ namespace SharedData
         public override bool PriorityMessage { get; set; } = false;
     }
 
+    [MessagePackObject]
     public class PlayerLeft : NetworkMessage
     {
         [Key(1)]
@@ -57,6 +62,7 @@ namespace SharedData
         public override bool PriorityMessage { get; set; } = false;
     }
 
+    [MessagePackObject]
     public class PlayerSnapShot : NetworkMessage
     {
         [Key(1)]
@@ -80,7 +86,7 @@ namespace SharedData
         public override bool PriorityMessage { get; set; } = false;
     }
 
-
+    [MessagePackObject]
     public class PlayerUpdate : NetworkMessage
     {
         [Key(1)]
@@ -108,6 +114,7 @@ namespace SharedData
         public override bool PriorityMessage { get; set; } = false;
     }
 
+    [MessagePackObject]
     public class PlayerInfoUpdate : NetworkMessage
     {
         [Key(1)]
@@ -121,6 +128,7 @@ namespace SharedData
         public override bool PriorityMessage { get; set; } = false;
     }
 
+    [MessagePackObject]
     public class LaserShot : NetworkMessage
     {
         [Key(1)]
@@ -142,6 +150,7 @@ namespace SharedData
         public override bool PriorityMessage { get; set; } = false;
     }
 
+    [MessagePackObject]
     public class ChatMessage : NetworkMessage
     {
         
@@ -175,6 +184,7 @@ namespace SharedData
         public override bool PriorityMessage { get; set; } = true;
     }
 
+    [MessagePackObject]
     public class ChatAcknowledgement : NetworkMessage
     {
         [Key(1)]
@@ -187,7 +197,8 @@ namespace SharedData
         public override MessageType MessageType => MessageType.ChatAcknowledgement;
         public override bool PriorityMessage { get; set; } = true;
     }
-    
+
+    [MessagePackObject]
     public class Acknowledgement : NetworkMessage
     {
         [Key(1)]

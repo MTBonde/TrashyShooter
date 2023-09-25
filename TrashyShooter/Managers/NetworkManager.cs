@@ -55,23 +55,22 @@ namespace MultiplayerEngine
             private void OnDataRecieved(byte[] receivedData)
             {
                 (NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo = NetworkMessageProtocol.ReceiveNetworkMessage(receivedData);
-                NetworkMessage message;
+                NetworkMessage message = messageInfo.Message;
                 switch (messageInfo.Type)
                 {
                     case MessageType.ClientJoinAnswer:
-                        JoinAnswer joinAnswer = (JoinAnswer)messageInfo.Message;
+                        JoinAnswer joinAnswer = (JoinAnswer)message;
                         GameObject yourPlayer = new GameObject();
                         yourPlayer.AddComponent<Player>().Setup(true);
                         yourPlayer.GetComponent<Sender>().SetID(joinAnswer.playerID);
                         return;
                     case MessageType.PlayerJoined:
-                        message = (PlayerJoined)messageInfo.Message;
                         GameObject joinedPlayer = new GameObject();
                         joinedPlayer.AddComponent<Player>().Setup(false);
                         joinedPlayer.GetComponent<Receiver>().SetID(((PlayerJoined)message).playerID);
                         return;
                     case MessageType.ClientHasLeft:
-                        PlayerLeft leftData = (PlayerLeft)messageInfo.Message;
+                        PlayerLeft leftData = (PlayerLeft)message;
                         foreach (GameObject go in SceneManager.active_scene.gameObjects)
                         {
                             if (go.Components.OfType<Receiver>().Any())
