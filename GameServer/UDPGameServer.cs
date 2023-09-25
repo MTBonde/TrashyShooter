@@ -17,10 +17,11 @@ namespace GameServer
 
         private MessageHandler messageHandler;
         private ClientManager clientManager;
-        private GameLogicController controller;
-        private SnapshotManager snapshotManager;
+        private SnapshotManager snapshotManager = new SnapshotManager();
         private GameWorldManager worldManager;
-        private PlayerManager playerManager;
+        private PlayerManager playerManager = new PlayerManager();
+        private LagCompensationManager lagCompensationManager;
+        private GameLogicController controller;
 
         private ConcurrentDictionary<byte, IPEndPoint> clients = new ConcurrentDictionary<byte, IPEndPoint>();
         private byte nextAvailableID = 0;
@@ -35,6 +36,10 @@ namespace GameServer
             udpServer = new UdpClient(port);
             // Initialize IPEndPoint to capture client data.
             endPoint = new IPEndPoint(IPAddress.Any, port);
+
+            lagCompensationManager = new LagCompensationManager(snapshotManager);
+
+            controller = new GameLogicController(snapshotManager, lagCompensationManager, playerManager);
 
             messageHandler = new MessageHandler(controller, snapshotManager, clients);
             clientManager = new ClientManager();
