@@ -102,10 +102,10 @@ namespace MultiplayerEngine
             }
 
             ///only reason for async is to support the fake latency
-            public async void SendDataToServer(NetworkMessage message)
+            public async void SendDataToServer<T>(T message) where T : NetworkMessage
             {
                 //await Task.Delay(2000);
-                udpClient.Send(NetworkMessageProtocol.SendNetworkMessage(message, message.MessageType, MessagePriority.Low, endPoint).MessageBytes);
+                udpClient.Send(NetworkMessageProtocol.SendNetworkMessage<T>(message, message.MessageType, MessagePriority.Low, endPoint).MessageBytes);
                 //byte[] messageBytes = new byte[1024];
                 //byte messageTypeByte = message.GetMessageTypeAsByte;
                 //switch (message.MessageType)

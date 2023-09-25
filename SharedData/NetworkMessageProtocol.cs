@@ -84,16 +84,16 @@ namespace SharedData
         /// <param name="priority">Priority level of the message.</param>
         /// <param name="clientEP">Client endpoint.</param>
         /// <returns>A tuple containing the message bytes, the length of the message, and the client endpoint.</returns>
-        public static (byte[] MessageBytes, int Length, IPEndPoint ClientEP) SendNetworkMessage(NetworkMessage message,
+        public static (byte[] MessageBytes, int Length, IPEndPoint ClientEP) SendNetworkMessage<T> (T message,
                                                                                                 MessageType messageType,
                                                                                                 MessagePriority priority,
-                                                                                                IPEndPoint clientEP)
+                                                                                                IPEndPoint clientEP) where T : NetworkMessage
         {
             // Trin 1: Koder headeren
             byte header = EncodeHeader(messageType, priority, 0);  // extraBits sat til 0 for nu, men hvad skal der ske med dem?
 
             // Trin 2: Serialiserer beskedobjektet med MessagePack
-            byte[] messageBytes = MessagePackSerializer.Serialize(message);
+            byte[] messageBytes = MessagePackSerializer.Serialize((T)message);
 
             // Trin 3: Kombinerer header og besked
             byte[] combinedBytes = new byte[1 + messageBytes.Length];
