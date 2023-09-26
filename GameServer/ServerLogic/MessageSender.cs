@@ -102,7 +102,7 @@ namespace GameServer
                 if(client.Value != thisClientEndPoint)
                 {
                     // Sender beskeden til de andre klienter
-                    await SendAsync(playerJoined, MessageType.PlayerJoined, MessagePriority.Low, client.Value);
+                    await SendAsync(playerJoined, MessageType.PlayerJoined, MessagePriority.Low, thisClientEndPoint);
                 }
             }
         }

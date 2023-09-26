@@ -42,10 +42,10 @@ namespace GameServer
             // Opret Collider til den interpolerede tilstand
             List<Collider> pastColliders = CollisionManager.colliders.Select(c => (Collider)c.Clone()).ToList();
 
-            lock(lockObject)
+            lock (lockObject)
             {
                 // Opdaterer pastColliders og interpolatedState
-                for(int i = 0; i < pastColliders.Count; i++)
+                for (int i = 0; i < pastColliders.Count; i++)
                 {
                     pastColliders[i].position = new Vector3(interpolatedState[i].positionX, interpolatedState[i].positionY, interpolatedState[i].positionZ);
                 }

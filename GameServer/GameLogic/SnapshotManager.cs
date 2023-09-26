@@ -22,7 +22,7 @@ namespace GameServer
         // En variabel til at holde den seneste tid
         private DateTime latestSnapshotTime;
 
-        private const int MaxSnapshots = 240;
+        private const int MaxSnapshots = 1000;
 
         // Dictionary til at gemme snapshots baseret på tidspunkt
         private ConcurrentDictionary<DateTime, PlayerSnapShot[]> playerSnapshots = new ConcurrentDictionary<DateTime, PlayerSnapShot[]>();
@@ -74,20 +74,18 @@ namespace GameServer
         // Metode til at finde et par af snapshots baseret på en bestemt tid og spiller ID
         public async Task<(PlayerSnapShot[] prevSnap, PlayerSnapShot[] afterSnap, DateTime prev, DateTime after)> GetSnapshot(DateTime targetTime, byte playerID)
         {
-            //DateTime beforeTime = new DateTime();
-            DateTime beforeTime = latestSnapshotTime;
-            //DateTime afterTime = new DateTime();
-            DateTime afterTime = latestSnapshotTime;
+            DateTime beforeTime = new DateTime();
+            //DateTime beforeTime = latestSnapshotTime;
+            DateTime afterTime = new DateTime();
+            //DateTime afterTime = latestSnapshotTime;
             PlayerSnapShot[] beforeSnap = null;
             PlayerSnapShot[] afterSnap = null;
 
             //// await for at sikre at der er nået at tage et snap som kan bruges som after
             //await Task.Delay(100);
             // Vent, hvis nødvendigt, for at sikre at der er et tilgængeligt snapshot
-            if(afterSnap == null)
-            {
-                await Task.Delay(100);  
-            }
+            
+            await Task.Delay(100);
 
             foreach(KeyValuePair<DateTime, PlayerSnapShot[]> snapshot in playerSnapshots)
             {
@@ -100,7 +98,7 @@ namespace GameServer
                         afterSnap = snapshot.Value;
                     }
                 }
-                if(beforeSnap == null || snapshot.Key < afterTime)
+                else if(beforeSnap == null || snapshot.Key < afterTime)
                 {
                     beforeTime = snapshot.Key;
                     beforeSnap = snapshot.Value;

@@ -14,7 +14,7 @@ namespace GameServer
         private GameWorldManager gameWorldManager;
         private SnapshotManager snapshotManager;
         private LagCompensationManager lagCompensationManager;
-        private PlayerManager playerManager;
+        public PlayerManager playerManager;
 
         public GameLogicController(SnapshotManager snapshotManager,
                               LagCompensationManager lagCompensationManager,
@@ -92,7 +92,7 @@ namespace GameServer
             {
                 //TODO: send ping from client and use in sytract for delay
                 // Perform lag-compensated shooting logic
-                await lagCompensationManager.PerformLagCompensatedShoot(DateTime.UtcNow.Subtract(TimeSpan.FromMilliseconds(0)),
+                lagCompensationManager.PerformLagCompensatedShoot(DateTime.UtcNow,
                                                                   playerManager.players[playerID],
                                                                   update,
                                                                   playerID,
