@@ -189,6 +189,7 @@ namespace SharedData
                 // Hvis beskedtypen ikke findes
                 default:
                     Console.WriteLine("BESKEDEN FINDES IKKE: " + decodedMessageType);
+                    message = null;
                     break;
             }
 
