@@ -56,6 +56,11 @@ namespace MultiplayerEngine
                 chatField.enterSomethingText = "Press Enter to chat";
                 chatField.transform.Position = new Vector2(200, Globals.ScreenSize.Y - 50);
                 chat = new GameObject().AddComponent<TextRenderer>();
+                chat.transform.Position = new Vector2(200, Globals.ScreenSize.Y - 100);
+                chat.color = Color.White;
+                chat.TextPivot = TextRenderer.TextPivots.ButtomCenter;
+                chat.text = "";
+                sender.ChatUpdate += UpdateChat;
             }
             else
             {
@@ -220,6 +225,7 @@ namespace MultiplayerEngine
             bullet.transform.Rotation = new Vector3(0, lookDirection.X, lookDirection.Y);
             bullet.GetComponent<LaserComponent>().FireLaser(transform.Rotation, 10);
         }
+
         public void HandleSnapShot(PlayerSnapShot snap)
         {
             if (receiver != null) // interpolation
@@ -243,6 +249,16 @@ namespace MultiplayerEngine
                 {
                     unProcessedInputs.Remove(input);
                 }
+            }
+        }
+
+        string chatMessages = "";
+        public void UpdateChat(NetworkMessage message)
+        {
+            if (message.MessageType == MessageType.ChatMessage)
+            {
+                chatMessages = chatMessages + "\n" + ((ChatMessage)message).Message;
+                chat.SetText(chatMessages.ToString());
             }
         }
     }
