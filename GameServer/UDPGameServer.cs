@@ -15,6 +15,7 @@ namespace GameServer
         // IPEndPoint to store client info.
         private IPEndPoint endPoint;
 
+        private ChatManager chatManager;
         private ClientManager clientManager = new();
         private MessageHandler messageHandler;
         private SnapshotManager snapshotManager = new SnapshotManager();
@@ -44,7 +45,7 @@ namespace GameServer
             controller = new GameLogicController(snapshotManager, lagCompensationManager, playerManager);
 
             messageHandler = new MessageHandler(controller, snapshotManager, clientManager.clients);
-            //clientManager = new ClientManager();
+            chatManager = new ChatManager(clientManager, playerManager);
         }
 
         /// <summary>
@@ -66,10 +67,10 @@ namespace GameServer
                     byte playerID = clientManager.DeterminePlayerID(result.RemoteEndPoint); 
                     
 
-                    // Håndterer den modtagne besked ved hjælp af MessageHandler.
+                    // Håndterer den modtagne besked ved hjælp af MessageHandler eller chat.
                     await messageHandler.HandleIncomingMessage(result.Buffer, playerID);
 
-                    
+                    await chatManager.HandleIncomingMessage(result.Buffer, playerID);
 
                 }
                 catch(Exception e)

@@ -28,6 +28,31 @@ namespace GameServer
             };
         }
 
+        public async Task HandleIncomingMessage(byte[] receivedData, byte playerID)
+        {
+            (NetworkMessage message, MessageType messageType, MessagePriority messagePriority) = NetworkMessageProtocol.ReceiveNetworkMessage(receivedData);
+
+
+
+            if(chatMessageHandlers.TryGetValue(messageType, out MessageHandlerDelegate handler))
+            {
+                Console.WriteLine($"Received message of type {messageType} from player {playerID}");
+
+                // Process the message
+                await handler((message, messageType, messagePriority), playerID);
+
+                // Send acknowledgment if the message is high priority
+                if(messagePriority == MessagePriority.High)
+                {
+                    // TODO: ACK ID await MessageSender.SendAcknowledgment(playerID, messageType, messageId);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Unknown message type: {messageType}");
+            }
+        }
+
         // Handles incoming chat message
         private async Task HandleIncomingChatMessage((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
