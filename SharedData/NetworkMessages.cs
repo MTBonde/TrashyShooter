@@ -155,9 +155,9 @@ namespace SharedData
     {
         
         [Key(1)] 
-        public string? Message;
+        public string Message;
         [Key(2)] 
-        public string? UserName;
+        public string UserName;
         [Key(3)] 
         public DateTime Time;
         [IgnoreMember]

@@ -1,4 +1,7 @@
-﻿using SharedData;
+﻿using System.Collections.Concurrent;
+using System.Net;
+
+using SharedData;
 
 namespace GameServer
 {
@@ -28,79 +31,98 @@ namespace GameServer
         // Handles incoming chat message
         private async Task HandleIncomingChatMessage((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
-            // Tries to cast the incoming message to ChatMessage. If it fails, chatMessage will be null.
+            // Attempt to cast the incoming NetworkMessage to a ChatMessage type.
             ChatMessage chatMessage = messageInfo.Message as ChatMessage;
 
-            //Chat chat = new() { ChatMessage = chatMessage, ChatPlayerName = playerManager.players[playerID].name, Time = DateTime.Now };
-
-            // Checks if the cast was successful
+            // If the cast is successful, then set the properties.
             if(chatMessage != null)
             {
-                // Logs the chat message
+                // TODO WHERE GET STRING? chatMessage.Message =
+                chatMessage.UserName = playerManager.players[playerID].name;
+                chatMessage.Time = DateTime.Now;
+
+                // Output the chat message to the console.
                 Console.WriteLine($"{chatMessage.Time} - {chatMessage.UserName}: {chatMessage.Message}");
 
-                // Checks if the message has high priority
+                // Check for high-priority messages.
                 if(messageInfo.Priority == MessagePriority.High)
                 {
-                    // Sends an acknowledgment for high-priority messages
-                    // TODO: ACKID await MessageSender.SendAcknowledgment(playerID, MessageType.ChatMessage, messageId);
+                    // Placeholder for sending an acknowledgment for high-priority messages.
+                    // TODO: Implement the actual acknowledgment sending logic here.
+                    // ACKID await MessageSender.SendAcknowledgment(playerID, MessageType.ChatMessage, messageId);
                 }
             }
 
-           //await MessageSender.SendDataToClients(chat);
-            await Task.CompletedTask;
+            // Asynchronously send the chat data to all connected clients.
+            await MessageSender.SendDataToClients(chatMessage, MessageType.ChatMessage, MessagePriority.High);
         }
 
-       
+
 
 
         private async Task HandleIncomingChatCommand((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
-            // Deserialize the incoming data into a NetworkMessageCommands object
+            // Deserialize the incoming data into a NetworkMessageCommands object           
             ChatCommand chatCommand = messageInfo.Message as ChatCommand;
-
-            // Handle the command
-            switch(chatCommand.Command)
+            if(chatCommand != null)
             {
-                case Commands.List:
-                    //List<string> clientNamesList = new List<string>();
-                    //foreach(var clientEntry in clients)
-                    //{
-                    //    clientNamesList.Add(clientEntry.Value.Name);
-                    //}
-                    //string clientNames = string.Join(", ", clientNamesList);
-                    //// TODO: MESSAGSENDER SendDirectMessage(client, $"Connected clients: {clientNames}");
-                    break;
-                case Commands.All:
-                    // Broadcast message to all clients
-                    // TODO: MESSAGESENDER SendMessageToAllClients BroadcastMessage($"{clientName}: {messageCommands.Message}");
-                    break;
-                case Commands.Direct:
-                    //foreach(var clientEntry in clients)
-                    //{
-                    //    // TODO: PLAYER/CLIENT ID NAME IP
-                    //    if(clientEntry.Value.Name == chatCommand.TargetName)
-                    //    {
-                    //        targetClient = clientEntry.Value.TcpClient;
-                    //        break;
-                    //    }
-                    //}
+                string clientName = playerManager.players[playerID].name;
+                switch(chatCommand.Command)
+                {
+                    case Commands.List:
+                        //List<string> clientNamesList = new List<string>();
+                        //foreach(var clientEntry in clients)
+                        //{
+                        //    clientNamesList.Add(clientEntry.Value.Name);
+                        //}
+                        //string clientNames = string.Join(", ", clientNamesList);
+                        //// TODO: MESSAGSENDER SendDirectMessage(client, $"Connected clients: {clientNames}");
 
-                    //if(targetClient != null)
-                    //{
-                    //    // TODO: MESSAGESENDER SendDirectMessage(targetClient, $"{clientName}: {messageCommands.Message}");
-                    //}
-                    //else
-                    //{
-                    //    // TODO: MESSAGESENDER  SendDirectMessage(client, "Target client not found.");
-                    //}
-                    break;
-                default:
-                    Console.WriteLine("Unknown command received.");
-                    break;
+                        var clientNamesList = playerManager.players.Values.Select(p => p.name).ToList();
+                        string clientNames = string.Join(", ", clientNamesList);
+                        // Replace with your real message sending logic
+                        // await MessageSender.SendDirectMessage(client, $"Connected clients: {clientNames}");
+                        break;
+                    case Commands.All:
+                        // Broadcast message to all clients
+                        await MessageSender.SendDataToClients(chatCommand, MessageType.ChatCommand, MessagePriority.High);
+                        break;
+                    case Commands.Direct:
+
+                        //foreach(var clientEntry in clients)
+                        //{
+                        //    // TODO: PLAYER/CLIENT ID NAME IP
+                        //    if(clientEntry.Value.Name == chatCommand.TargetName)
+                        //    {
+                        //        targetClient = clientEntry.Value.TcpClient;
+                        //        break;
+                        //    }
+                        //}
+
+                        //if(targetClient != null)
+                        //{
+                        //    // TODO: MESSAGESENDER SendDirectMessage(targetClient, $"{clientName}: {messageCommands.Message}");
+                        //}
+                        //else
+                        //{
+                        //    // TODO: MESSAGESENDER  SendDirectMessage(client, "Target client not found.");
+                        //}
+                        
+                        //Player targetPlayer = playerManager.players[playerID].name;
+                        //if(targetPlayer != null)
+                        //{
+                        //    // await MessageSender.SendDirectMessage(targetPlayer.TcpClient, $"{clientName}: {chatCommand.Message}");
+                        //}
+                        //else
+                        //{
+                        //    // await MessageSender.SendDirectMessage(client, "Target client not found.");
+                        //}
+                        break;
+                    default:
+                        Console.WriteLine("Unknown command received.");
+                        break;
+                }
             }
-
-            await Task.CompletedTask;
         }
 
         private async Task HandleIncomingChatAcknowledgement((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
@@ -117,7 +139,15 @@ namespace GameServer
                 // TODO: CHAT what else??
             }
 
-            await Task.CompletedTask;
+            // Henter alle klienter fra ClientManager
+            ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
+
+            // Finder klientens IPEndPoint fra ConcurrentDictionary
+            if(clients.TryGetValue(playerID, out IPEndPoint thisClientEndPoint))
+            {
+                // Sender svar til klienten
+                await MessageSender.SendAsync(chatAck, MessageType.ChatAcknowledgement, MessagePriority.High, thisClientEndPoint);
+            }
         }
     }
 }
