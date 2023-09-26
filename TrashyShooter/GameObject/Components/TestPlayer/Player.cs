@@ -257,7 +257,7 @@ namespace MultiplayerEngine
         {
             if (message.MessageType == MessageType.ChatMessage)
             {
-                chatMessages = chatMessages + "\n" + ((ChatMessage)message).Message;
+                chatMessages = chatMessages + "\n" + ((ChatMessage)message).UserName + ": " + ((ChatMessage)message).Message;
                 chat.SetText(chatMessages.ToString());
             }
         }
