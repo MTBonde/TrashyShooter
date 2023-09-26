@@ -34,10 +34,7 @@ namespace GameServer
                // { MessageType.Heartbeat, HandleHeartbeat },
               //  { MessageType.PlayerJoined, HandlePlayerJoined },
                 { MessageType.PlayerLeft, HandlePlayerLeft },
-                { MessageType.PlayerUpdate, HandlePlayerUpdate },
-                //{ MessageType.PlayerSnapShot, HandlePlayerSnapShot },
-               // { MessageType.PlayerInfoUpdate, HandlePlayerInfoUpdate },
-                //{ MessageType.LaserShot, HandleLaserShot },              
+                { MessageType.PlayerUpdate, HandlePlayerUpdate },        
                 //{ MessageType.Error, HandleError },
                 { MessageType.Acknowledgement, HandleAcknowledgement },
                 //{ MessageType.res4, Handleres4 }
