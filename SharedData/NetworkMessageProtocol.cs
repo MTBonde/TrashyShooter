@@ -108,7 +108,7 @@ namespace SharedData
             catch (Exception ex)
             {
                 // Log exception her
-                Console.WriteLine($"Exception: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                Console.WriteLine($"Exception: {messageType} {ex.Message}\nStack Trace: {ex.StackTrace}");
                 return (null, 0, null);  // Returner en tom tuple som indikator for fejl
             }
         }

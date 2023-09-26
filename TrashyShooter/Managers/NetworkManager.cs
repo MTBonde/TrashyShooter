@@ -95,6 +95,9 @@ namespace MultiplayerEngine
                     case MessageType.ChatMessage:
                         message = (ChatMessage)messageInfo.Message; 
                         break;
+                    case MessageType.Acknowledgement:
+                        Debug.WriteLine($"Acknowledgement: {message.MessageType}");
+                        break;
                     //case MessageType.ScoreboardUpdate:
                     //    message = (JoinAnswer)messageInfo.Message;
                     //    break;
@@ -108,7 +111,12 @@ namespace MultiplayerEngine
             public async void SendDataToServer<T>(T message) where T : NetworkMessage
             {
                 //await Task.Delay(2000);
-                udpClient.Send(NetworkMessageProtocol.SendNetworkMessage<T>(message, message.MessageType, MessagePriority.Low, endPoint).MessageBytes);
+                MessagePriority priority;
+                if (message.PriorityMessage)
+                    priority = MessagePriority.High;
+                else 
+                    priority = MessagePriority.Low;
+                udpClient.Send(NetworkMessageProtocol.SendNetworkMessage<T>(message, message.MessageType, priority, endPoint).MessageBytes);
                 //byte[] messageBytes = new byte[1024];
                 //byte messageTypeByte = message.GetMessageTypeAsByte;
                 //switch (message.MessageType)

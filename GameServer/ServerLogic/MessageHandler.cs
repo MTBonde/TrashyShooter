@@ -104,7 +104,7 @@ namespace GameServer
             }
 
             await MessageSender.SendDataToClientsExceptOne(playerJoined, MessageType.PlayerJoined, MessagePriority.Low, playerID);
-            await MessageSender.NotifyOtherClients(playerID, thisClientEndPoint);
+            await MessageSender.NotifyAboutOtherClients(playerID, thisClientEndPoint);
 
             await Task.CompletedTask;
         }
