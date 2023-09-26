@@ -122,7 +122,23 @@ namespace SharedData
 
             // Trin 3: Dekoder beskedobjektet med MessagePack
             // Beskeden dekodes fra byte-array til objekt.
-            NetworkMessage message = MessagePackSerializer.Deserialize<NetworkMessage>(messageBytes);
+            NetworkMessage message;
+
+            switch (decodedMessageType)
+            {
+                case MessageType.ClientHasJoined:
+                    message = MessagePackSerializer.Deserialize<Join>(messageBytes);
+                    break;
+                case MessageType.ClientHasLeft:
+                    message = MessagePackSerializer.Deserialize<Leave>(messageBytes);
+                    break;
+                case MessageType.ClientJoinAnswer:
+                    message = MessagePackSerializer.Deserialize<JoinAnswer>(messageBytes);
+                    break;
+                default:
+                    message = null;
+                    break;
+            }
 
             // Returnerer en tuple med den dekodede besked, dens type og prioritet
             return (message, decodedMessageType, decodedPriority);
