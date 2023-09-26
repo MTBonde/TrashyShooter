@@ -30,6 +30,7 @@ namespace MultiplayerEngine
             {
                 // Opret et nyt kugle GameObject
                 GameObject laser = new GameObject();
+                laser.enabled = false;
 
                 // Tilføj en BulletComponent til GameObject
                 LaserComponent laserComp = laser.AddComponent<LaserComponent>();
@@ -52,11 +53,16 @@ namespace MultiplayerEngine
                 laserComp.stopPS.lifeTime = 0.5f;
                 laserComp.stopPS.spawnRate = 250;
 
+                laserComp.gameObject.AddComponent<AudioSouce>();
+                laserComp.gameObject.GetComponent<AudioSouce>().Spacial = true;
+                laserComp.gameObject.GetComponent<AudioSouce>().SetSoundEffect("laserSound");
+
                 // Deaktiver/stopper GameObjects components
                 laserComp.enabled = false;
                 laserComp.linePS.StopSystem();
                 laserComp.startPS.StopSystem();
                 laserComp.stopPS.StopSystem();
+                laser.enabled = true;
 
                 // Tilføj GameObject til puljen
                 availableLasers.Enqueue(laser);
@@ -92,6 +98,7 @@ namespace MultiplayerEngine
             laser.GetComponent<LaserComponent>().linePS.StartSystem();
             laser.GetComponent<LaserComponent>().startPS.StartSystem();
             laser.GetComponent<LaserComponent>().stopPS.StartSystem();
+            laser.GetComponent<AudioSouce>().Play();
 
             // Returner det aktiverede GameObject
             return laser;

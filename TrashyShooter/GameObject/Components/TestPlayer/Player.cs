@@ -61,6 +61,7 @@ namespace MultiplayerEngine
                 chat.TextPivot = TextRenderer.TextPivots.ButtomCenter;
                 chat.text = "";
                 sender.ChatUpdate += UpdateChat;
+                gameObject.AddComponent<AudioListner>();
             }
             else
             {
@@ -178,7 +179,10 @@ namespace MultiplayerEngine
                         if (lastKeyboardState.IsKeyDown(Keys.Space) != keyState.IsKeyDown(Keys.Space))
                             update.jump = keyState.IsKeyDown(Keys.Space);
                         if (lastMouseState.LeftButton.HasFlag(ButtonState.Pressed) != mouseState.LeftButton.HasFlag(ButtonState.Pressed))
-                            update.shoot = mouseState.LeftButton.HasFlag(ButtonState.Pressed);//replace with mouseinput
+                        {
+                            update.shoot = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
+                            update.PriorityMessage = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
+                        }
                         else
                             update.shoot = false;
                         if (lastKeyboardState.IsKeyDown(Keys.R) != keyState.IsKeyDown(Keys.R))

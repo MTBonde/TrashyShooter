@@ -101,6 +101,12 @@
 /processorParam:TextureFormat=Compressed
 /build:Laser.fbx
 
+#begin laserSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:laserSound.wav
+
 #begin Particle.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
