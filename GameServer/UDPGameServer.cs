@@ -39,6 +39,7 @@ namespace GameServer
             endPoint = new IPEndPoint(IPAddress.Any, port);
 
             MessageSender.Initialize(udpServer, clientManager, snapshotManager);
+            MessageSender.StartRetryMechanism();
 
             lagCompensationManager = new LagCompensationManager(snapshotManager);
 

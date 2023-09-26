@@ -144,7 +144,7 @@ namespace GameServer
             await gameLogicController.HandlePlayerUpdate(update, playerID);
         }
 
-        
+
 
 
 
@@ -166,6 +166,5 @@ namespace GameServer
 
             await Task.CompletedTask;
         }
-
     }
 }

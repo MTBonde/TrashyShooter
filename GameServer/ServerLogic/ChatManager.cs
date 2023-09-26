@@ -32,22 +32,15 @@ namespace GameServer
         {
             (NetworkMessage message, MessageType messageType, MessagePriority messagePriority) = NetworkMessageProtocol.ReceiveNetworkMessage(receivedData);
 
-
-
             if(chatMessageHandlers.TryGetValue(messageType, out MessageHandlerDelegate handler))
             {
                 Console.WriteLine($"Received message of type {messageType} from player {playerID}");
 
                 // Process the message
                 await handler((message, messageType, messagePriority), playerID);
-
-                // Send acknowledgment if the message is high priority
-                if(messagePriority == MessagePriority.High)
-                {
-                    // TODO: ACK ID await MessageSender.SendAcknowledgment(playerID, messageType, messageId);
-                }
             }
         }
+
 
         // Handles incoming chat message
         private async Task HandleIncomingChatMessage((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
@@ -65,17 +58,15 @@ namespace GameServer
                 // Output the chat message to the console.
                 Console.WriteLine($"{chatMessage.Time} - {chatMessage.UserName}: {chatMessage.Message}");
 
-                // Check for high-priority messages.
+                // Asynchronously send the chat data to all connected clients.
+                await MessageSender.SendDataToClients(chatMessage, MessageType.ChatMessage, MessagePriority.High);
+
+                // If this is a high-priority message, track it for acknowledgment.
                 if(messageInfo.Priority == MessagePriority.High)
                 {
-                    // Placeholder for sending an acknowledgment for high-priority messages.
-                    // TODO: Implement the actual acknowledgment sending logic here.
-                    // ACKID await MessageSender.SendAcknowledgment(playerID, MessageType.ChatMessage, messageId);
+                    MessageSender.TrackMessage(chatMessage, MessageType.ChatMessage, MessagePriority.High, null /*clientEP*/, playerID);
                 }
             }
-
-            // Asynchronously send the chat data to all connected clients.
-            await MessageSender.SendDataToClients(chatMessage, MessageType.ChatMessage, MessagePriority.High);
         }
 
 

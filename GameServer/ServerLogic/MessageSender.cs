@@ -13,6 +13,10 @@ namespace GameServer
         private static ClientManager clientManager;
         private static SnapshotManager snapshotManager;
 
+        // Dictionary to hold unacknowledged messages
+        private static ConcurrentDictionary<Guid, UnacknowledgedMessageInfo> unacknowledgedMessages = new ConcurrentDictionary<Guid, UnacknowledgedMessageInfo>();
+
+
         private static object lockObject = new object();
 
         public static void Initialize(UdpClient udpServer, ClientManager clientManager, SnapshotManager snapshotManager)
@@ -42,6 +46,8 @@ namespace GameServer
         /// <returns>A Task representing the asynchronous operation.</returns>
         public static async Task SendAsync<T>(T message, MessageType messageType, MessagePriority priority, IPEndPoint clientEP) where T : NetworkMessage
         {
+            Guid messageId = Guid.NewGuid();
+
             // Bruger NetworkMessageProtocol til at lave en samlet serialiseret netværksbesked
             (byte[] MessageBytes, int Length, IPEndPoint ClientEP) networkMessage = NetworkMessageProtocol.SendNetworkMessage(message,
                                                                                                                               messageType,
@@ -52,6 +58,14 @@ namespace GameServer
             await udpServer.SendAsync(networkMessage.MessageBytes,
                                       networkMessage.Length,
                                       networkMessage.ClientEP);
+
+            if(priority == MessagePriority.High)
+            {
+                // Use the ClientManager to get the client list
+                ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
+                TrackMessage(message, messageType, priority, clientEP, 1);
+
+            }
         }
 
 
@@ -120,7 +134,6 @@ namespace GameServer
                 {
                     playerID = playerID,
                     OriginalMessageType = originalMessageType,
-                    // Include messageId if you add it to the class definition
                 };
             }
             else
@@ -130,7 +143,6 @@ namespace GameServer
                 {
                     playerID = playerID,
                     OriginalMessageType = originalMessageType,
-                    // Include messageId if you add it to the class definition
                 };
             }
 
@@ -150,42 +162,77 @@ namespace GameServer
         // Structure to hold message information
         public struct UnacknowledgedMessageInfo
         {
-            public NetworkMessage Message;
-            public MessageType Type;
-            public MessagePriority Priority;
-            public IPEndPoint ClientEP;
-            public DateTime Timestamp;
-            public byte ClientID;  
+            public NetworkMessage Message;  // The actual message object
+            public MessageType Type;        // Type of the message
+            public MessagePriority Priority; // Priority level
+            public IPEndPoint ClientEP;     // Client's IP address and port
+            public DateTime Timestamp;      // Time when the message was sent
+            public int Attempts;            // Number of resend attempts
 
-            public UnacknowledgedMessageInfo(NetworkMessage message, MessageType type, MessagePriority priority, IPEndPoint clientEP, DateTime timestamp, byte clientId)
+            public UnacknowledgedMessageInfo(NetworkMessage message, MessageType type, MessagePriority priority, IPEndPoint clientEP, DateTime timestamp)
             {
                 Message = message;
                 Type = type;
                 Priority = priority;
                 ClientEP = clientEP;
                 Timestamp = timestamp;
-                ClientID = clientId;  
+                Attempts = 0;  
             }
         }
 
-        // Dictionary to hold unacknowledged messages
-        public static ConcurrentDictionary<Guid, UnacknowledgedMessageInfo> unacknowledgedMessages = new ConcurrentDictionary<Guid, UnacknowledgedMessageInfo>();
 
+        
         // Method to add a message to the unacknowledged list
         public static void TrackMessage(NetworkMessage message, MessageType type, MessagePriority priority, IPEndPoint clientEP, byte clientId)
         {
             Guid messageId = Guid.NewGuid();  // Generate a unique ID for this message
-            UnacknowledgedMessageInfo messageInfo = new UnacknowledgedMessageInfo(message, type, priority, clientEP, DateTime.UtcNow, clientId);
+            UnacknowledgedMessageInfo messageInfo = new UnacknowledgedMessageInfo(message, type, priority, clientEP, DateTime.UtcNow);
             unacknowledgedMessages.TryAdd(messageId, messageInfo);
 
 
         }
 
-        // Method to remove a message from the unacknowledged list (usually called when an acknowledgment is received)
+        // Method to remove a message from the unacknowledged list 
         public static void AcknowledgeMessage(Guid messageId)
         {
             unacknowledgedMessages.TryRemove(messageId, out _);
         }
+
+        private static async Task RetryUnacknowledgedMessages()
+        {
+            foreach(var entry in unacknowledgedMessages)
+            {
+                var messageId = entry.Key;
+                var messageInfo = entry.Value;
+
+                if(messageInfo.Attempts >= 3)
+                {
+                    // Remove if max attempts reached
+                    unacknowledgedMessages.TryRemove(messageId, out _);
+                    continue;
+                }
+
+                // Resend the message
+                await SendAsync(messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
+
+                // Increment the attempt count
+                messageInfo.Attempts++;
+                unacknowledgedMessages[messageId] = messageInfo;
+            }
+        }
+
+        public static void StartRetryMechanism()
+        {
+            Task.Run(async () =>
+            {
+                while(true)
+                {
+                    await RetryUnacknowledgedMessages();
+                    await Task.Delay(5000);  // Wait for 5 seconds before the next retry scan
+                }
+            });
+        }
+
 
         // Felt til at stoppe timer-loopet
         private static bool stopTimer = false;
@@ -235,4 +282,6 @@ namespace GameServer
             stopTimer = true;
         }
     }
+
+
 }
