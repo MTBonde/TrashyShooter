@@ -11,7 +11,9 @@ namespace MultiplayerEngine
     {
 
         TextRenderer healthText;
+        int health;
         TextRenderer ammoText;
+        AudioSouce takeDammageSound;
 
         public void Awake()
         {
@@ -23,6 +25,9 @@ namespace MultiplayerEngine
             ammoText.TextPivot = TextRenderer.TextPivots.TopLeft;
             ammoText.color = Color.Red;
             ammoText.transform.Position = new Vector2(0, 50);
+
+            takeDammageSound = gameObject.AddComponent<AudioSouce>();
+            takeDammageSound.SetSoundEffect("TakeDammage");
         }
 
         public void UpdateDisplay(NetworkMessage message)
@@ -30,6 +35,9 @@ namespace MultiplayerEngine
             PlayerInfoUpdate update = (PlayerInfoUpdate)message;
             healthText.SetText("Health: " + update.health.ToString());
             ammoText.SetText("Ammo: " + update.ammo.ToString());
+            if (update.health < health)
+                takeDammageSound.Play();
+            health = update.health;
         }
     }
 }

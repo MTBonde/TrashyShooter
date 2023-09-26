@@ -26,6 +26,7 @@ namespace MultiplayerEngine
         ScoreBoard scoreBoard;
         InputField chatField;
         TextRenderer chat;
+        AudioSouce walking;
 
         bool ready;
         bool chatting = false;
@@ -62,6 +63,9 @@ namespace MultiplayerEngine
                 chat.text = "";
                 sender.ChatUpdate += UpdateChat;
                 gameObject.AddComponent<AudioListner>();
+                walking = gameObject.AddComponent<AudioSouce>();
+                walking.SetSoundEffect("walking");
+                walking.loop = true;
             }
             else
             {
@@ -170,6 +174,10 @@ namespace MultiplayerEngine
                             movement += sideVector * moveScale * elapsed;
                         if (keyState.IsKeyDown(Keys.A))
                             movement -= sideVector * moveScale * elapsed;
+                        if (!walking.IsPlaying() && movement - transform.Position3D != Vector3.Zero)
+                            walking.Play();
+                        else if (walking.IsPlaying() && movement - transform.Position3D == Vector3.Zero)
+                            walking.Stop();
                         transform.Position3D = movement;
                         PlayerUpdate update = new PlayerUpdate();
                         update.up = keyState.IsKeyDown(Keys.W);
