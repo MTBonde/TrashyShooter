@@ -10,10 +10,12 @@ namespace GameServer
         private Dictionary<MessageType, MessageHandlerDelegate> chatMessageHandlers;
 
         private ClientManager clientManager;
+        private PlayerManager playerManager;
 
-        public ChatManager(ClientManager clientManager)
+        public ChatManager(ClientManager clientManager, PlayerManager playerManager)
         {
             this.clientManager = clientManager;
+            this.playerManager = playerManager;
 
             chatMessageHandlers = new Dictionary<MessageType, MessageHandlerDelegate>
             {
@@ -29,6 +31,8 @@ namespace GameServer
             // Tries to cast the incoming message to ChatMessage. If it fails, chatMessage will be null.
             ChatMessage chatMessage = messageInfo.Message as ChatMessage;
 
+            //Chat chat = new() { ChatMessage = chatMessage, ChatPlayerName = playerManager.players[playerID].name, Time = DateTime.Now };
+
             // Checks if the cast was successful
             if(chatMessage != null)
             {
@@ -42,10 +46,12 @@ namespace GameServer
                     // TODO: ACKID await MessageSender.SendAcknowledgment(playerID, MessageType.ChatMessage, messageId);
                 }
             }
+
+           //await MessageSender.SendDataToClients(chat);
             await Task.CompletedTask;
         }
 
-
+       
 
 
         private async Task HandleIncomingChatCommand((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)

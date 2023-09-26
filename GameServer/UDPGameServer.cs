@@ -37,7 +37,7 @@ namespace GameServer
             // Initialize IPEndPoint to capture client data.
             endPoint = new IPEndPoint(IPAddress.Any, port);
 
-            MessageSender.Initialize(udpServer, clientManager);
+            MessageSender.Initialize(udpServer, clientManager, snapshotManager);
 
             lagCompensationManager = new LagCompensationManager(snapshotManager);
 

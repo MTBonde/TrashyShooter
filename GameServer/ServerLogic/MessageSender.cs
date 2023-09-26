@@ -11,18 +11,23 @@ namespace GameServer
     {
         private static UdpClient udpServer;
         private static ClientManager clientManager;
+        private static SnapshotManager snapshotManager;
+
         private static object lockObject = new object();
 
-        public static void Initialize(UdpClient udpServer, ClientManager clientManager)
+        public static void Initialize(UdpClient udpServer, ClientManager clientManager, SnapshotManager snapshotManager)
         {
             lock(lockObject)
             {
-                if(MessageSender.udpServer == null && MessageSender.clientManager == null)
+                if(MessageSender.udpServer == null && MessageSender.clientManager == null && MessageSender.snapshotManager == null)
                 {
                     MessageSender.udpServer = udpServer;
                     MessageSender.clientManager = clientManager;
+                    MessageSender.snapshotManager = snapshotManager;
                 }
+                ContinouslySendPlayerSnapShot();
             }
+
         }
 
         
@@ -186,7 +191,7 @@ namespace GameServer
         private static bool stopTimer = false;
         private const int SnapShotSpeed = 30;
 
-        private static async Task HandlePlayerSnapShot((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        private static async Task ContinouslySendPlayerSnapShot()
         {
             // Reset stop flag
             stopTimer = false;
@@ -196,6 +201,9 @@ namespace GameServer
 
             while (!stopTimer)
             {
+                // Henter alle klienter fra ClientManager
+                ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
+
                 // Tjek om der er nogen klienter
                 if (clients.Count == 0)
                 {
@@ -214,7 +222,7 @@ namespace GameServer
                 // Send snapshot til alle klienter
                 foreach (PlayerSnapShot pSnapshot in playerSnapShots)
                 {
-                    await MessageSender.SendDataToClients(pSnapshot, MessageType.PlayerSnapShot, MessagePriority.Low);
+                    await SendDataToClients(pSnapshot, MessageType.PlayerSnapShot, MessagePriority.Low);
                 }
 
                 await Task.Delay(interval);
@@ -226,6 +234,5 @@ namespace GameServer
         {
             stopTimer = true;
         }
-
     }
 }
