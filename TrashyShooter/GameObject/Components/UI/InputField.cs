@@ -9,14 +9,14 @@ namespace MultiplayerEngine
         static event Action OnStopWriting;
 
         public string input = "";
-        public string enterSomethingText;
+        public string enterSomethingText = "";
         private Keys[] lastPressedKeys;
         int dots;
         float time, timer = 0.5f;
         public bool isWriting = false;
         TextRenderer inputText;
 
-        public void Awake() 
+        public void Awake()
         {
             inputText = gameObject.AddComponent<TextRenderer>();
             inputText.color = Color.Black;
@@ -24,7 +24,7 @@ namespace MultiplayerEngine
             OnStopWriting += StopWriting;
             UIButton selectButton = gameObject.AddComponent<UIButton>();
             selectButton.OnClick += StartWriting;
-            selectButton.Scale = new Vector2(0.3f,0.1f);
+            selectButton.Scale = new Vector2(0.3f, 0.1f);
             //selectButton.SetTexture("InputField");
         }
 
