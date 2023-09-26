@@ -84,7 +84,7 @@ namespace GameServer
         /// </summary>
         /// <param name="playerID">Den deltagerende spillers ID.</param>
         /// <param name="thisClientEndPoint">Den deltagerende spillers ip.</param>
-        public static async Task NotifyOtherClients(byte playerID, IPEndPoint thisClientEndPoint)
+        public static async Task NotifyAboutOtherClients(byte playerID, IPEndPoint thisClientEndPoint)
         {
             // Opretter en PlayerJoined besked
             PlayerJoined playerJoined = new PlayerJoined();
@@ -102,7 +102,7 @@ namespace GameServer
                 if(client.Value != thisClientEndPoint)
                 {
                     // Sender beskeden til de andre klienter
-                    await SendAsync(playerJoined, MessageType.PlayerJoined, MessagePriority.Low, client.Value);
+                    await SendAsync(playerJoined, MessageType.PlayerJoined, MessagePriority.Low, thisClientEndPoint);
                 }
             }
         }
