@@ -47,10 +47,6 @@ namespace GameServer
                     // TODO: ACK ID await MessageSender.SendAcknowledgment(playerID, messageType, messageId);
                 }
             }
-            else
-            {
-                Console.WriteLine($"Unknown message type: {messageType}");
-            }
         }
 
         // Handles incoming chat message
