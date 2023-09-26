@@ -64,7 +64,7 @@ namespace GameServer
                 Console.WriteLine($"Received message of type {messageType} from player {playerID}");
 
                 // Process the message
-                await handler((message, messageType, messagePriority), playerID);
+                handler((message, messageType, messagePriority), playerID);
 
                 // Send acknowledgment if the message is high priority
                 if(messagePriority == MessagePriority.High)
@@ -107,7 +107,7 @@ namespace GameServer
             }
 
             await MessageSender.SendDataToClientsExceptOne(playerJoined, MessageType.PlayerJoined, MessagePriority.Low, playerID);
-            await MessageSender.NotifyAboutOtherClients(playerID, thisClientEndPoint);
+            await MessageSender.NotifyOtherClients(playerID, thisClientEndPoint);
 
             await Task.CompletedTask;
         }
