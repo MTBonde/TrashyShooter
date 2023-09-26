@@ -92,6 +92,9 @@ namespace MultiplayerEngine
                     case MessageType.LaserShot:
                         message = (LaserShot)messageInfo.Message;
                         break;
+                    case MessageType.ChatMessage:
+                        message = (ChatMessage)messageInfo.Message; 
+                        break;
                     //case MessageType.ScoreboardUpdate:
                     //    message = (JoinAnswer)messageInfo.Message;
                     //    break;

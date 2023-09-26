@@ -58,7 +58,7 @@ namespace GameServer
 
             if(messageHandlers.TryGetValue(messageType, out MessageHandlerDelegate handler))
             {
-                Console.WriteLine($"Received message of type {messageType} from player {playerID}");
+                if (messageType != MessageType.PlayerUpdate) Console.WriteLine($"Received message of type {messageType} from player {playerID}");
 
                 // Process the message
                 handler((message, messageType, messagePriority), playerID);
