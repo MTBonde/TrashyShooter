@@ -11,7 +11,6 @@ namespace GameServer
         //public delegate Task MessageHandlerDelegate(byte[] dataToDeserialize, byte playerID);
         public delegate Task MessageHandlerDelegate((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID);
 
-        private const int SnapShotSpeed = 30;
 
 
         // Ordbog til at mappe MessageType til den tilsvarende beskedhåndterer
@@ -36,7 +35,7 @@ namespace GameServer
               //  { MessageType.PlayerJoined, HandlePlayerJoined },
                 { MessageType.PlayerLeft, HandlePlayerLeft },
                 { MessageType.PlayerUpdate, HandlePlayerUpdate },
-                { MessageType.PlayerSnapShot, HandlePlayerSnapShot },
+                //{ MessageType.PlayerSnapShot, HandlePlayerSnapShot },
                // { MessageType.PlayerInfoUpdate, HandlePlayerInfoUpdate },
                 //{ MessageType.LaserShot, HandleLaserShot },              
                 //{ MessageType.Error, HandleError },
@@ -145,50 +144,7 @@ namespace GameServer
             await gameLogicController.HandlePlayerUpdate(update, playerID);
         }
 
-        // Felt til at stoppe timer-loopet
-        private bool stopTimer = false;
-
-        private async Task HandlePlayerSnapShot((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
-        {
-            // Reset stop flag
-            stopTimer = false;
-
-            // Frekvens for snapshots
-            int interval = (int)(1000f / SnapShotSpeed); // snapshotSpeed er antallet af snapshots pr. sekund 1000/30=33,3pr sek
-
-            while(!stopTimer)
-            {
-                // Tjek om der er nogen klienter
-                if(clients.Count == 0)
-                {
-                    await Task.Delay(interval);
-                    continue;
-                }
-
-                // Hent den nyeste snapshot
-                PlayerSnapShot[] playerSnapShots = snapshotManager.GetLatestWorldStateSnapshot();  
-                if(playerSnapShots == null)
-                {
-                    await Task.Delay(interval);
-                    continue;
-                }
-
-                // Send snapshot til alle klienter
-                foreach(PlayerSnapShot pSnapshot in playerSnapShots)
-                {
-                    await MessageSender.SendDataToClients(pSnapshot, MessageType.PlayerSnapShot, MessagePriority.Low);
-                }
-
-                await Task.Delay(interval);
-            }
-        }
-
-        // Metode til at stoppe timeren
-        public void StopTimer()
-        {
-            stopTimer = true;
-        }
-
+        
 
 
 

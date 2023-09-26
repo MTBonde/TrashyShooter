@@ -182,5 +182,50 @@ namespace GameServer
             unacknowledgedMessages.TryRemove(messageId, out _);
         }
 
+        // Felt til at stoppe timer-loopet
+        private static bool stopTimer = false;
+        private const int SnapShotSpeed = 30;
+
+        private static async Task HandlePlayerSnapShot((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
+        {
+            // Reset stop flag
+            stopTimer = false;
+
+            // Frekvens for snapshots
+            int interval = (int)(1000f / SnapShotSpeed); // snapshotSpeed er antallet af snapshots pr. sekund 1000/30=33,3pr sek
+
+            while (!stopTimer)
+            {
+                // Tjek om der er nogen klienter
+                if (clients.Count == 0)
+                {
+                    await Task.Delay(interval);
+                    continue;
+                }
+
+                // Hent den nyeste snapshot
+                PlayerSnapShot[] playerSnapShots = snapshotManager.GetLatestWorldStateSnapshot();
+                if (playerSnapShots == null)
+                {
+                    await Task.Delay(interval);
+                    continue;
+                }
+
+                // Send snapshot til alle klienter
+                foreach (PlayerSnapShot pSnapshot in playerSnapShots)
+                {
+                    await MessageSender.SendDataToClients(pSnapshot, MessageType.PlayerSnapShot, MessagePriority.Low);
+                }
+
+                await Task.Delay(interval);
+            }
+        }
+
+        // Metode til at stoppe timeren
+        public static void StopTimer()
+        {
+            stopTimer = true;
+        }
+
     }
 }
