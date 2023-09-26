@@ -51,7 +51,7 @@ namespace GameServer
 
 
         // Send to all clients
-        public static async Task SendDataToClients(NetworkMessage message, MessageType messageType, MessagePriority priority)
+        public static async Task SendDataToClients<T>(T message, MessageType messageType, MessagePriority priority) where T : NetworkMessage
         {
             // Use the ClientManager to get the client list
             ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
@@ -61,7 +61,7 @@ namespace GameServer
             }
         }
 
-        public static async Task SendDataToClientsExceptOne(NetworkMessage message, MessageType messageType, MessagePriority priority, byte exceptionID)
+        public static async Task SendDataToClientsExceptOne<T>(T message, MessageType messageType, MessagePriority priority, byte exceptionID) where T : NetworkMessage
         {
             // Use the ClientManager to get the client list
             ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
