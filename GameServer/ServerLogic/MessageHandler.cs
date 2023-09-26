@@ -88,7 +88,7 @@ namespace GameServer
             Console.WriteLine($"Klient med ID {playerID} har tilsluttet sig.");
 
             // Opretter en ny Join-objekt for at håndtere spillerens indtræden i spillet
-            Join clientHasJoined = new Join();
+            Join clientHasJoined = (Join)messageInfo.Message;
 
             // delegeret til GameController
             gameLogicController.HandleJoin(playerID, clientHasJoined.playerName);
@@ -116,7 +116,7 @@ namespace GameServer
         private async Task HandleClientHasLeft((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Deserialiser dataene til en PlayerLeft-objekt
-            Leave clientHasLeft = new();
+            Leave clientHasLeft = (Leave)messageInfo.Message;
 
             // Delegate to GLC
             gameLogicController.HandlePlayerLeft(playerID);
@@ -128,7 +128,7 @@ namespace GameServer
         public async Task HandlePlayerLeft((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Deserialiser dataene til en PlayerLeft-objekt
-            PlayerLeft playerleft = new();
+            PlayerLeft playerleft = (PlayerLeft)messageInfo.Message;
 
             // Delegate to GLC
             gameLogicController.HandlePlayerLeft(playerID);
@@ -139,7 +139,7 @@ namespace GameServer
 
         private async Task HandlePlayerUpdate((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
-            PlayerUpdate update = new();
+            PlayerUpdate update = (PlayerUpdate)messageInfo.Message;
 
             // Delegate to GLC
             await gameLogicController.HandlePlayerUpdate(update, playerID);
