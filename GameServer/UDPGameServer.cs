@@ -80,9 +80,9 @@ namespace GameServer
 
                     // Udskriver beskeden og typen af exception.
                     Console.WriteLine($"!ERROR! An unexpected error occurred: {e.Message}. Exception Type: {exceptionType}");
-
+                    Console.WriteLine($"Exception: {e.Message}\nStack Trace: {e.StackTrace}");
                     // Guard clause for non-SocketException types
-                    if(!(e is SocketException))
+                    if (!(e is SocketException))
                     {
                         return;
                     }

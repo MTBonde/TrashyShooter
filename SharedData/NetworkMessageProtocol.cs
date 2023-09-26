@@ -89,19 +89,28 @@ namespace SharedData
                                                                                                 MessagePriority priority,
                                                                                                 IPEndPoint clientEP) where T : NetworkMessage
         {
-            // Trin 1: Koder headeren
-            byte header = EncodeHeader(messageType, priority, 0);  // extraBits sat til 0 for nu, men hvad skal der ske med dem?
+            try
+            {
+                // Trin 1: Koder headeren
+                byte header = EncodeHeader(messageType, priority, 0);  // extraBits sat til 0 for nu, men hvad skal der ske med dem?
 
-            // Trin 2: Serialiserer beskedobjektet med MessagePack
-            byte[] messageBytes = MessagePackSerializer.Serialize((T)message);
+                // Trin 2: Serialiserer beskedobjektet med MessagePack
+                byte[] messageBytes = MessagePackSerializer.Serialize((T)message);
 
-            // Trin 3: Kombinerer header og besked
-            byte[] combinedBytes = new byte[1 + messageBytes.Length];
-            combinedBytes[0] = header;
-            Buffer.BlockCopy(messageBytes, 0, combinedBytes, 1, messageBytes.Length);
+                // Trin 3: Kombinerer header og besked
+                byte[] combinedBytes = new byte[1 + messageBytes.Length];
+                combinedBytes[0] = header;
+                Buffer.BlockCopy(messageBytes, 0, combinedBytes, 1, messageBytes.Length);
 
-            // Returnerer en tuple med beskedbytes, længde og klientendpoint
-            return (combinedBytes, combinedBytes.Length, clientEP);
+                // Returnerer en tuple med beskedbytes, længde og klientendpoint
+                return (combinedBytes, combinedBytes.Length, clientEP);
+            }
+            catch (Exception ex)
+            {
+                // Log exception her
+                Console.WriteLine($"Exception: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                return (null, 0, null);  // Returner en tom tuple som indikator for fejl
+            }
         }
 
         /// <summary>

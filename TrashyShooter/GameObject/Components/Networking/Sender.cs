@@ -46,7 +46,7 @@ namespace MultiplayerEngine
             }
         }
 
-        public void SendData(NetworkMessage message)
+        public void SendData<T>(T message) where T : NetworkMessage
         {
             GameWorld.Instance.gameClient.SendDataToServer(message);
         }
