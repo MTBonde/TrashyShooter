@@ -125,6 +125,7 @@ namespace MultiplayerEngine
                             {
                                 ChatMessage chatMessage = new ChatMessage();
                                 chatMessage.Message = chatField.input;
+                                chatField.input = "";
                                 gameObject.GetComponent<Sender>().SendData(chatMessage);
                                 chatting = false;
                                 chatField.isWriting = false;
