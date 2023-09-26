@@ -124,19 +124,71 @@ namespace SharedData
             // Beskeden dekodes fra byte-array til objekt.
             NetworkMessage message;
 
-            switch (decodedMessageType)
+            switch(decodedMessageType)
             {
+                // Forbindelse
                 case MessageType.ClientHasJoined:
                     message = MessagePackSerializer.Deserialize<Join>(messageBytes);
-                    break;
-                case MessageType.ClientHasLeft:
-                    message = MessagePackSerializer.Deserialize<Leave>(messageBytes);
                     break;
                 case MessageType.ClientJoinAnswer:
                     message = MessagePackSerializer.Deserialize<JoinAnswer>(messageBytes);
                     break;
+                case MessageType.ClientHasLeft:
+                    message = MessagePackSerializer.Deserialize<Leave>(messageBytes);
+                    break;
+                //case MessageType.Heartbeat:
+                //    message = MessagePackSerializer.Deserialize<Heartbeat>(messageBytes);
+                //    break;
+
+                // Spiller
+                case MessageType.PlayerJoined:
+                    message = MessagePackSerializer.Deserialize<PlayerJoined>(messageBytes);
+                    break;
+                case MessageType.PlayerLeft:
+                    message = MessagePackSerializer.Deserialize<PlayerLeft>(messageBytes);
+                    break;
+                case MessageType.PlayerUpdate:
+                    message = MessagePackSerializer.Deserialize<PlayerUpdate>(messageBytes);
+                    break;
+                case MessageType.PlayerSnapShot:
+                    message = MessagePackSerializer.Deserialize<PlayerSnapShot>(messageBytes);
+                    break;
+                case MessageType.PlayerInfoUpdate:
+                    message = MessagePackSerializer.Deserialize<PlayerInfoUpdate>(messageBytes);
+                    break;
+
+                // Visuel
+                case MessageType.LaserShot:
+                    message = MessagePackSerializer.Deserialize<LaserShot>(messageBytes);
+                    break;
+
+                // Kommunikation
+                case MessageType.ChatMessage:
+                    message = MessagePackSerializer.Deserialize<ChatMessage>(messageBytes);
+                    break;
+                case MessageType.ChatCommand:
+                    message = MessagePackSerializer.Deserialize<ChatCommand>(messageBytes);
+                    break;
+                case MessageType.ChatAcknowledgement:
+                    message = MessagePackSerializer.Deserialize<ChatAcknowledgement>(messageBytes);
+                    break;
+
+                // Fejl
+                //case MessageType.Error:
+                //    message = MessagePackSerializer.Deserialize<Error>(messageBytes);
+                //    break;
+
+                // Reserveret
+                case MessageType.Acknowledgement:
+                    message = MessagePackSerializer.Deserialize<Acknowledgement>(messageBytes);
+                    break;
+                //case MessageType.res4:
+                //    message = MessagePackSerializer.Deserialize<res4>(messageBytes);
+                //    break;
+
+                // Hvis beskedtypen ikke findes
                 default:
-                    message = null;
+                    Console.WriteLine("BESKEDEN FINDES IKKE: " + decodedMessageType);
                     break;
             }
 
