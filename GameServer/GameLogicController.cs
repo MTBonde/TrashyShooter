@@ -78,7 +78,7 @@ namespace GameServer
             playerManager.AddPlayer(playerID, playerName);
             playerManager.players[playerID].OnDeath += HandlePlayerDeath;
 
-            if(playerManager.players.Count >= 1 && !gameWorldManager.GameRoundStartet)
+            if(playerManager.players.Count >= 2 && !gameWorldManager.GameRoundStartet)
             {
                 gameWorldManager.StartGameStartCountdown();
 

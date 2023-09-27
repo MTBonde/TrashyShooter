@@ -14,7 +14,6 @@ namespace GameServer
 
         // Tid i sekunder
         private int elapsedTimeInSeconds = 0;
-        private int countdownValue = 5;
 
         // Definer events
         public event Action GameRoundStarted;
@@ -47,15 +46,9 @@ namespace GameServer
         // Start 5-second countdown for game start
         public void StartGameStartCountdown()
         {
-            ResetCountdown();
             countdownTimer.Elapsed += OnGameStartCountdownTick;
-            countdownTimer.Start();
-            CountdownStarted?.Invoke(countdownValue);
-        }
+            StartCountdown();
 
-        private void ResetCountdown()
-        {
-            countdownValue = 5;
         }
 
         // Start 5-second countdown for game end warning
@@ -77,6 +70,7 @@ namespace GameServer
         private void OnGameStartCountdownTick(object sender, ElapsedEventArgs e)
         {
             HandleCountdownTick();
+            countdownTimer.Elapsed -= OnGameStartCountdownTick;
         }
 
         // Countdown tick event for game end warning
@@ -89,56 +83,49 @@ namespace GameServer
         // Shared countdown tick logic
         private void HandleCountdownTick()
         {
-            CountdownTick?.Invoke(countdownValue);
+            // Denne linje beregner den resterende tid i sekunder for nedtællingen
+            // ved at bruge modulo-operationen på den nuværende sekund i systemets tid. 
+            int remainingTime = (int)(5 - (DateTime.Now.Second % 5));
+            CountdownTick?.Invoke(remainingTime);
 
             ServerInfoMessage serverInfo = new ServerInfoMessage()
             {
-                ServerInformation = countdownValue >= 0 ? $"M:Game Round start in {countdownValue}" : ""
+                ServerInformation = $"M:Game Round start in {remainingTime}"
             };
-
+            
             MessageSender.SendDataToClients(serverInfo, MessageType.ServerInfoMessage, MessagePriority.Low);
 
-            if(countdownValue <= 0)
+            if(remainingTime <= 0)
             {
                 countdownTimer.Stop();
-                countdownTimer.Elapsed -= OnGameStartCountdownTick;  // Detach event
-
-                // Clear the countdown display on clients by sending an empty message
-                serverInfo.ServerInformation = "";
-                MessageSender.SendDataToClients(serverInfo, MessageType.ServerInfoMessage, MessagePriority.Low);
-
-                // Start the new game round
                 StartNewGameRound();
-            }
-            else
-            {
-                countdownValue--;  // Decrement countdown value
+                serverInfo = new ServerInfoMessage()
+                {
+                    ServerInformation = ""
+                };
+
+                MessageSender.SendDataToClients(serverInfo, MessageType.ServerInfoMessage, MessagePriority.Low);
             }
         }
-
 
         // Start en ny spilrunde
         public void StartNewGameRound()
         {
-            // Reset elapsed time
+            // Nulstiller forløbet tid
             elapsedTimeInSeconds = 0;
 
-            // Indicate that a game round has started
+            // Angiver at en spilrunde er startet.
             GameRoundStartet = true;
 
-            // Detach any existing event handlers to avoid multiple triggers
-            gameRoundTimer.Elapsed -= OnTimedEvent;
-
-            // Attach the event handler
-            gameRoundTimer.Elapsed += OnTimedEvent;
-
-            // Start the game round timer
+            // Starter nedtællingstimeren for spilrunden.
             gameRoundTimer.Start();
 
-            // Trigger the game round started event
+            // Tilmelder en eventhandler til timerens Elapsed-event
+            gameRoundTimer.Elapsed += OnTimedEvent;
+
+            // Udløser eventet for start af spilrunde.
             GameRoundStarted?.Invoke();
         }
-
 
         // Eventhandler for timerens Elapsed-event
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
