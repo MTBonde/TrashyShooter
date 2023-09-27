@@ -122,6 +122,13 @@ namespace GameServer
                     OriginalMessageType = originalMessageType,
                     // Include messageId if you add it to the class definition
                 };
+
+                // Get the IPEndPoint of the client to whom you want to send the acknowledgment
+                if(clients.TryGetValue(playerID, out IPEndPoint clientEndPoint))
+                {
+                    // send the acknowledgment back to the client
+                    await SendAsync((ChatAcknowledgement)acknowledgmentMessage, MessageType.ChatAcknowledgement, MessagePriority.High, clientEndPoint);
+                }
             }
             else
             {
@@ -132,14 +139,14 @@ namespace GameServer
                     OriginalMessageType = originalMessageType,
                     // Include messageId if you add it to the class definition
                 };
-            }
 
-            // Get the IPEndPoint of the client to whom you want to send the acknowledgment
-            if(clients.TryGetValue(playerID, out IPEndPoint clientEndPoint))
-            {
-                // send the acknowledgment back to the client
-                await SendAsync(acknowledgmentMessage, MessageType.Acknowledgement, MessagePriority.High, clientEndPoint);
-            }
+                // Get the IPEndPoint of the client to whom you want to send the acknowledgment
+                if(clients.TryGetValue(playerID, out IPEndPoint clientEndPoint))
+                {
+                    // send the acknowledgment back to the client
+                    await SendAsync((Acknowledgement)acknowledgmentMessage, MessageType.Acknowledgement, MessagePriority.High, clientEndPoint);
+                }
+            }            
         }
 
 
