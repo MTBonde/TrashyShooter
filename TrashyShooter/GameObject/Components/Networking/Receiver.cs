@@ -33,7 +33,7 @@ namespace MultiplayerEngine
                     PlayerSnapShot playerData = (PlayerSnapShot)message;
                     if(playerData.playerID == id)
                     {
-                        snapShotAction.Invoke(playerData);
+                        snapShotAction?.Invoke(playerData);
                     }
                     break;
             }
