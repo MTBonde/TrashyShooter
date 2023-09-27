@@ -22,12 +22,15 @@ namespace MultiplayerEngine
         public Color color = Color.Black;
         public float scale = 1;
         Vector2 origin;
+        public Vector2 offset;
         public enum TextPivots
         {
             TopCenter,
             MidCenter,
             ButtomCenter,
-            TopLeft
+            TopLeft,
+            MidLeft,
+            MidRight
         }
         TextPivots textPivot = TextPivots.MidCenter;
         public TextPivots TextPivot 
@@ -89,7 +92,15 @@ namespace MultiplayerEngine
                 case TextPivots.TopLeft:
 
                     break;
+                case TextPivots.MidLeft:
+                    origin.Y = font.MeasureString(text).Y / 2;
+                    break;
+                case TextPivots.MidRight:
+                    origin.X = font.MeasureString(text).X;
+                    origin.Y = font.MeasureString(text).Y / 2;
+                    break;
             }
+            origin += offset;
         }
     }
 }
