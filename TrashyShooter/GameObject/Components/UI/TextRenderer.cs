@@ -60,6 +60,13 @@ namespace MultiplayerEngine
             font = GameWorld.Instance.Content.Load<SpriteFont>(fontName);
         }
 
+        // Metode til at ændre tekststørrelse
+        public void SetTextSize(float newSize)
+        {
+            // Ændrer skalefaktoren for tekst
+            scale = newSize;
+        }
+
         public void DrawUI(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(font,text,transform.Position,color,0,origin,scale/10, SpriteEffects.None,1);
