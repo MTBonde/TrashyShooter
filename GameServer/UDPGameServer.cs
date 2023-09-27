@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedData;
+using System;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
@@ -46,6 +47,14 @@ namespace GameServer
 
             messageHandler = new MessageHandler(controller, snapshotManager, clientManager.clients);
             chatManager = new ChatManager(clientManager, playerManager);
+
+            playerManager.OnPlayerStatChanged += UpdatePlayerInfo;
+        }
+
+        //TODO: flyt et bedre sted hen
+        void UpdatePlayerInfo(NetworkMessage updateMessage, byte id)
+        {
+            MessageSender.SendAsync((PlayerInfoUpdate)updateMessage, MessageType.PlayerInfoUpdate, MessagePriority.Low, clientManager.clients[id]);
         }
 
         /// <summary>

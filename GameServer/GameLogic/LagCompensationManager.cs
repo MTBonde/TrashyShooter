@@ -80,7 +80,7 @@ namespace GameServer
             SendShootConfirm(update.SnapSeqId, true, colInfo.playerID);
 
             // Reduce ammo for the shooting player in all cases
-            players[id].ammoInMagazine -= 1;
+            //players[id].ammoInMagazine -= 1;
         }
 
         // Andre metoder og hjælpefunktioner for lag kompensation

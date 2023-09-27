@@ -37,9 +37,9 @@ namespace MultiplayerEngine
         //{
         //    (string name, int score)[] playerScores = ((ScoreboardUpdate)update).scores;
         //    int length;
-        //    if(playerScores.Length > scores.Length)
+        //    if (playerScores.Length > scores.Length)
         //        length = scores.Length;
-        //    else 
+        //    else
         //        length = playerScores.Length;
         //    for (int i = 0; i < length; i++)
         //    {

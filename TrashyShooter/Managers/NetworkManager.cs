@@ -87,7 +87,7 @@ namespace MultiplayerEngine
                         message = (PlayerSnapShot)messageInfo.Message;
                         break;
                     case MessageType.PlayerInfoUpdate:
-                        message = (PlayerUpdate)messageInfo.Message;
+                        message = (PlayerInfoUpdate)messageInfo.Message;
                         break;
                     case MessageType.LaserShot:
                         message = (LaserShot)messageInfo.Message;
