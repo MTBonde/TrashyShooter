@@ -99,6 +99,12 @@ namespace GameServer
             {
                 countdownTimer.Stop();
                 StartNewGameRound();
+                serverInfo = new ServerInfoMessage()
+                {
+                    ServerInformation = ""
+                };
+
+                MessageSender.SendDataToClients(serverInfo, MessageType.ServerInfoMessage, MessagePriority.Low);
             }
         }
 
