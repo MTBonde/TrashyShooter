@@ -145,9 +145,9 @@ namespace SharedData
                 case MessageType.ClientHasLeft:
                     message = MessagePackSerializer.Deserialize<ClientHasLeft>(messageBytes);
                     break;
-                //case MessageType.Heartbeat:
-                //    message = MessagePackSerializer.Deserialize<Heartbeat>(messageBytes);
-                //    break;
+                case MessageType.ServerInfoMessage:
+                    message = MessagePackSerializer.Deserialize<ServerInfoMessage>(messageBytes);
+                    break;
 
                 // Spiller
                 case MessageType.PlayerJoined:
