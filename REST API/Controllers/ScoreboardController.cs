@@ -5,7 +5,7 @@ using System.Linq;
 namespace REST_API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ScoreboardController : ControllerBase
     {
         private readonly Dictionary<int, ScoreboardModel> _scoreboard;
@@ -16,15 +16,14 @@ namespace REST_API.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("GetScoreboard")]
         public ActionResult<IEnumerable<ScoreboardModel>> Get()
         {
             return Ok(_scoreboard.Values);
-
         }
 
 
-        [HttpPost]
+        [HttpPost("PostScore")]
         public IActionResult Post([FromBody] ScoreboardModel newEntry)
         {
             if (newEntry == null)

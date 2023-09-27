@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
-
 using SharedData;
+using REST_API;
+using System.Text.Json;
+using System.Text;
 
 namespace GameServer
 {
@@ -51,6 +53,8 @@ namespace GameServer
             playerCol.size = new Vector3(1, 1, 2);
             this.id = id;
             points = 0;
+
+            OnPointsChanged += UpdateScoreboard;
         }
 
         // Metoder til at udløse events
@@ -174,6 +178,25 @@ namespace GameServer
                 points = this.points
             };
             return update;
+        }
+
+        public async void UpdateScoreboard(int newScore)
+        {
+            ScoreboardModel score = new ScoreboardModel
+            {
+                score = newScore
+            };
+            string json = JsonSerializer.Serialize(score);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            try
+            {
+                HttpResponseMessage response = await RestManager.GetRestClient().PutAsync(id.ToString(), content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error on updating data to rest api\n" + ex.ToString());
+                return;
+            }
         }
     }
 }

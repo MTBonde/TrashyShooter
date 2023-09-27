@@ -47,6 +47,7 @@ namespace GameServer
 
             messageHandler = new MessageHandler(controller, snapshotManager, clientManager.clients);
             chatManager = new ChatManager(clientManager, playerManager);
+            RestManager.SetupRest();
 
             playerManager.OnPlayerStatChanged += UpdatePlayerInfo;
         }
