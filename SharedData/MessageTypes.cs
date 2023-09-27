@@ -6,7 +6,7 @@
         ClientHasJoined = 0,  // 0000
         ClientJoinAnswer = 1,  // 0001
         ClientHasLeft = 2,  // 0010
-        Heartbeat = 3,  // 0011
+        ServerInfoMessage = 3,  // 0011
 
         // Player
         PlayerJoined = 4,  // 0100

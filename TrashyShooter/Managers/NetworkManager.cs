@@ -59,7 +59,7 @@ namespace MultiplayerEngine
                 switch (messageInfo.Type)
                 {
                     case MessageType.ClientJoinAnswer:
-                        JoinAnswer joinAnswer = (JoinAnswer)message;
+                        ClientJoinAnswer joinAnswer = (ClientJoinAnswer)message;
                         GameObject yourPlayer = new GameObject();
                         yourPlayer.AddComponent<Player>().Setup(true);
                         yourPlayer.GetComponent<Sender>().SetID(joinAnswer.playerID);

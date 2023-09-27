@@ -16,6 +16,8 @@ namespace GameServer
         public event Action<int> CountdownTick;
         public event Action<int> CountdownStarted;
 
+        public bool GameRoundStartet = false;
+
         public GameWorldManager()
         {
             InitializeGameWorld();
@@ -91,6 +93,7 @@ namespace GameServer
         // Start en ny spilrunde
         public void StartNewGameRound()
         {
+            GameRoundStartet = true;
             // Starter timeren
             gameRoundTimer.Start();
             // Udløser GameRoundStarted event

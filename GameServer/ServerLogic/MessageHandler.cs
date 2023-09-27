@@ -85,13 +85,13 @@ namespace GameServer
             Console.WriteLine($"Klient med ID {playerID} har tilsluttet sig.");
 
             // Opretter en ny Join-objekt for at håndtere spillerens indtræden i spillet
-            Join clientHasJoined = (Join)messageInfo.Message;
+            ClientHasJoined clientHasJoined = (ClientHasJoined)messageInfo.Message;
 
             // delegeret til GameController
             gameLogicController.HandleJoin(playerID, clientHasJoined.playerName);
 
             // Opretter et svar og en besked om, at en ny spiller er kommet ind i spillet
-            JoinAnswer answer = new JoinAnswer { playerID = playerID };
+            ClientJoinAnswer answer = new ClientJoinAnswer { playerID = playerID };
             PlayerJoined playerJoined = new PlayerJoined { playerID = playerID };
 
             // Finder klientens IPEndPoint fra ConcurrentDictionary
@@ -113,7 +113,7 @@ namespace GameServer
         private async Task HandleClientHasLeft((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Deserialiser dataene til en PlayerLeft-objekt
-            Leave clientHasLeft = (Leave)messageInfo.Message;
+            ClientHasLeft clientHasLeft = (ClientHasLeft)messageInfo.Message;
 
             // Delegate to GLC
             gameLogicController.HandlePlayerLeft(playerID);

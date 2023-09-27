@@ -137,13 +137,13 @@ namespace SharedData
             {
                 // Forbindelse
                 case MessageType.ClientHasJoined:
-                    message = MessagePackSerializer.Deserialize<Join>(messageBytes);
+                    message = MessagePackSerializer.Deserialize<ClientHasJoined>(messageBytes);
                     break;
                 case MessageType.ClientJoinAnswer:
-                    message = MessagePackSerializer.Deserialize<JoinAnswer>(messageBytes);
+                    message = MessagePackSerializer.Deserialize<ClientJoinAnswer>(messageBytes);
                     break;
                 case MessageType.ClientHasLeft:
-                    message = MessagePackSerializer.Deserialize<Leave>(messageBytes);
+                    message = MessagePackSerializer.Deserialize<ClientHasLeft>(messageBytes);
                     break;
                 //case MessageType.Heartbeat:
                 //    message = MessagePackSerializer.Deserialize<Heartbeat>(messageBytes);

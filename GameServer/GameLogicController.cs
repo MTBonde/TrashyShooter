@@ -45,15 +45,17 @@ namespace GameServer
             // Convert integers to Vector3
             Vector3 respawnPosition = new Vector3(randomX, randomY, 0);
 
-            // Iterate over the dictionary and respawn each player
-            foreach(KeyValuePair<byte, PlayerInfo> entry in playerManager.players)
+            // 
+            for(int i = 0; i < playerManager.players.Count; i++)
             {
-                byte playerId = entry.Key;
+                byte playerId = playerManager.players[(byte)i].id;
 
                 // Use the generated coordinates to respawn the player
+                playerManager.ResetPlayer(playerId);
                 playerManager.RespawnPlayer(playerId, respawnPosition);
             }
         }
+
 
 
         private void OnGameRoundEnded()
@@ -76,13 +78,11 @@ namespace GameServer
             playerManager.AddPlayer(playerID, playerName);
             playerManager.players[playerID].OnDeath += HandlePlayerDeath;
 
-            if(playerManager.players.Count >= 2)
+            if(playerManager.players.Count >= 2 && !gameWorldManager.GameRoundStartet)
             {
                 gameWorldManager.StartGameStartCountdown();
-                for(int i = 0; i < playerManager.players.Count; i++)
-                {
-                    playerManager.ResetPlayer((byte)i);
-                }
+
+                
             }
         }
 
