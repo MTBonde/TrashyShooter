@@ -78,7 +78,7 @@ namespace MultiplayerEngine
                 soundEffectInstance.Volume = Math.Clamp((1 - volume) * 2,0,1);
             }
             //stops the sound while sound is equal to 0
-            else if(soundEffectInstance.State == SoundState.Playing)
+            else if (soundEffectInstance.State == SoundState.Playing)
                 soundEffectInstance.Stop();
         }
 
