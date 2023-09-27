@@ -1,5 +1,4 @@
-﻿using System;
-using System.Timers;
+﻿using System.Timers;
 
 using SharedData;
 
@@ -33,14 +32,14 @@ namespace GameServer
         private void InitializeGameWorld()
         {
             // 3 minutter i millisekunder
-            gameRoundTimer = new System.Timers.Timer(180000);
+            gameRoundTimer = new System.Timers.Timer(1000);
             // Event der udløses ved runde slut
-            gameRoundTimer.Elapsed += OnGameRoundEnd;
+            //gameRoundTimer.Elapsed += OnGameRoundEnd;
             // Kør kun eventet én gang
-            gameRoundTimer.AutoReset = false;
+            gameRoundTimer.AutoReset = true;
 
             // 1 second in milliseconds
-            countdownTimer = new System.Timers.Timer(1000); 
+            countdownTimer = new System.Timers.Timer(1000);
             countdownTimer.AutoReset = true;
         }
 
@@ -61,9 +60,10 @@ namespace GameServer
         // Start 5-second countdown for game end warning
         public void StartGameEndWarning()
         {
+            ResetCountdown();
             countdownTimer.Elapsed += OnGameEndWarningTick;
             StartCountdown();
-            CountdownStarted?.Invoke(5);
+            CountdownStarted?.Invoke(countdownValue);
         }
 
         // Generic Start Countdown
@@ -93,7 +93,7 @@ namespace GameServer
 
             ServerInfoMessage serverInfo = new ServerInfoMessage()
             {
-                ServerInformation = countdownValue >= 0 ? $"M:Game Round start in {countdownValue}" : ""
+                ServerInformation = countdownValue >= 0 ? $"M:Game Round start in {countdownValue}" : "M:"
             };
 
             MessageSender.SendDataToClients(serverInfo, MessageType.ServerInfoMessage, MessagePriority.Low);
@@ -104,7 +104,7 @@ namespace GameServer
                 countdownTimer.Elapsed -= OnGameStartCountdownTick;  // Detach event
 
                 // Clear the countdown display on clients by sending an empty message
-                serverInfo.ServerInformation = "";
+                serverInfo.ServerInformation = "M:";
                 MessageSender.SendDataToClients(serverInfo, MessageType.ServerInfoMessage, MessagePriority.Low);
 
                 // Start the new game round
@@ -120,8 +120,8 @@ namespace GameServer
         // Start en ny spilrunde
         public void StartNewGameRound()
         {
-            // Reset elapsed time
-            elapsedTimeInSeconds = 0;
+            // Set the initial time to 180 seconds (3 minutes)
+            elapsedTimeInSeconds = 10;
 
             // Indicate that a game round has started
             GameRoundStartet = true;
@@ -144,17 +144,30 @@ namespace GameServer
         // Eventhandler for timerens Elapsed-event
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            // Opdaterer forløbet tid
-            elapsedTimeInSeconds++;
+            // nedtælling
+            elapsedTimeInSeconds--;            
 
             // Opdaterer serverinformationen
             ServerInfoMessage serverInfo = new ServerInfoMessage()
             {
-                ServerInformation = $"T:Game Time elapsed {elapsedTimeInSeconds} seconds"
+                ServerInformation = $"T:Game Time left {elapsedTimeInSeconds} seconds"
             };
 
             // Sender serverinformationen til klienterne.
             MessageSender.SendDataToClients(serverInfo, MessageType.ServerInfoMessage, MessagePriority.Low);
+
+            //// Trigger 5-second warning
+            //if(elapsedTimeInSeconds <= 5)
+            //{
+            //    StartGameEndWarning();
+            //}
+
+            // Stop the timer when time reaches zero
+            if(elapsedTimeInSeconds <= 0)
+            {
+                gameRoundTimer.Stop();  // Stop the timer
+                GameRoundEnded?.Invoke();  // Trigger the game round ended event
+            }
         }
 
         // Afslut spilrunden
