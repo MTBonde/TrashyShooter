@@ -37,7 +37,7 @@ namespace GameServer
             // Event der udløses ved runde slut
             gameRoundTimer.Elapsed += OnGameRoundEnd;
             // Kør kun eventet én gang
-            gameRoundTimer.AutoReset = false;
+            gameRoundTimer.AutoReset = true;
 
             // 1 second in milliseconds
             countdownTimer = new System.Timers.Timer(1000); 
@@ -133,7 +133,6 @@ namespace GameServer
             gameRoundTimer.Elapsed += OnTimedEvent;
 
             // Start the game round timer
-            gameRoundTimer.AutoReset = true;  // Make sure the timer keeps ticking
             gameRoundTimer.Start();
 
             // Trigger the game round started event
