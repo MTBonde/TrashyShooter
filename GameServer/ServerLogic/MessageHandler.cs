@@ -11,9 +11,7 @@ namespace GameServer
         //public delegate Task MessageHandlerDelegate(byte[] dataToDeserialize, byte playerID);
         public delegate Task MessageHandlerDelegate((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID);
 
-
-
-        // Ordbog til at mappe MessageType til den tilsvarende beskedhåndterer
+        // Dictionary til at mappe MessageType til den tilsvarende beskedhåndterer
         private Dictionary<MessageType, MessageHandlerDelegate> messageHandlers;
 
         private ConcurrentDictionary<byte, IPEndPoint> clients;
