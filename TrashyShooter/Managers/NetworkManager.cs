@@ -95,6 +95,9 @@ namespace MultiplayerEngine
                     case MessageType.ChatMessage:
                         message = (ChatMessage)messageInfo.Message; 
                         break;
+                    case MessageType.ServerInfoMessage:
+                        message = (ServerInfoMessage)messageInfo.Message;
+                        break;
                     //case MessageType.ScoreboardUpdate:
                     //    message = (JoinAnswer)messageInfo.Message;
                     //    break;

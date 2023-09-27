@@ -28,6 +28,8 @@ namespace MultiplayerEngine
         TextRenderer chat;
         AudioSouce walking;
 
+        TextRenderer serverMidComment, serverTopComment;
+
         bool ready;
         bool chatting = false;
 
@@ -66,6 +68,14 @@ namespace MultiplayerEngine
                 walking = gameObject.AddComponent<AudioSouce>();
                 walking.SetSoundEffect("walking");
                 walking.loop = true;
+
+                serverMidComment = new GameObject().AddComponent<TextRenderer>();
+                serverMidComment.transform.Position = Globals.ScreenCenter;
+                serverMidComment.scale = 5;
+                serverTopComment = new GameObject().AddComponent<TextRenderer>();
+                serverTopComment.transform.Position = new Vector2(Globals.ScreenCenter.X, 50);
+                serverTopComment.scale = 2;
+                sender.ServerInfo += UpdateServerComment;
             }
             else
             {
@@ -76,6 +86,23 @@ namespace MultiplayerEngine
             //textRenderer = gameObject.AddComponent<TextRenderer>();
             //textRenderer.color = Color.White;
             ready = true;
+        }
+
+        public void UpdateServerComment(NetworkMessage message)
+        {
+            if (message.MessageType == MessageType.ServerInfoMessage)
+            {
+                string comment = ((ServerInfoMessage)message).ServerInformation;
+                string[] commentStrings = comment.Split(':');
+                if (commentStrings[0].Contains("T"))
+                {
+                    serverTopComment.SetText(commentStrings[1]);
+                }
+                else if (commentStrings[0].Contains("M"))
+                {
+                    serverMidComment.SetText(commentStrings[1]);
+                }
+            }
         }
 
         public void SnapshotUpdate(NetworkMessage message)
