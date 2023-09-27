@@ -27,7 +27,7 @@ namespace MultiplayerEngine
             Graphics = new GraphicsDeviceManager(this);
             Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            Graphics.IsFullScreen = true;
+            //Graphics.IsFullScreen = true;
             Graphics.ApplyChanges();
             this.IsFixedTimeStep = false;//false;
             this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 120d); //60);
