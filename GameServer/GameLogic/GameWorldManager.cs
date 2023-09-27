@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Timers;
 
+using SharedData;
+
 namespace GameServer
 {
     public class GameWorldManager
@@ -9,6 +11,9 @@ namespace GameServer
         private System.Timers.Timer gameRoundTimer;
         // Timer for 5sek countdown
         private System.Timers.Timer countdownTimer;
+
+        // Tid i sekunder
+        private int elapsedTimeInSeconds = 0;
 
         // Definer events
         public event Action GameRoundStarted;
@@ -83,6 +88,13 @@ namespace GameServer
             int remainingTime = (int)(5 - (DateTime.Now.Second % 5));
             CountdownTick?.Invoke(remainingTime);
 
+            ServerInfoMessage serverInfo = new ServerInfoMessage()
+            {
+                ServerInformation = $"M:Game Round start in {remainingTime}"
+            };
+            
+            MessageSender.SendDataToClients(serverInfo, MessageType.ServerInfoMessage, MessagePriority.Low);
+
             if(remainingTime <= 0)
             {
                 countdownTimer.Stop();
@@ -93,12 +105,36 @@ namespace GameServer
         // Start en ny spilrunde
         public void StartNewGameRound()
         {
+            // Nulstiller forløbet tid
+            elapsedTimeInSeconds = 0;
+
+            // Angiver at en spilrunde er startet.
             GameRoundStartet = true;
-            // Starter timeren
+
+            // Starter nedtællingstimeren for spilrunden.
             gameRoundTimer.Start();
-            // Udløser GameRoundStarted event
+
+            // Tilmelder en eventhandler til timerens Elapsed-event
+            gameRoundTimer.Elapsed += OnTimedEvent;
+
+            // Udløser eventet for start af spilrunde.
             GameRoundStarted?.Invoke();
-            Console.WriteLine("Spilrunden er startet!");
+        }
+
+        // Eventhandler for timerens Elapsed-event
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            // Opdaterer forløbet tid
+            elapsedTimeInSeconds++;
+
+            // Opdaterer serverinformationen
+            ServerInfoMessage serverInfo = new ServerInfoMessage()
+            {
+                ServerInformation = $"T:Game Time elapsed {elapsedTimeInSeconds} seconds"
+            };
+
+            // Sender serverinformationen til klienterne.
+            MessageSender.SendDataToClients(serverInfo, MessageType.ServerInfoMessage, MessagePriority.Low);
         }
 
         // Afslut spilrunden
