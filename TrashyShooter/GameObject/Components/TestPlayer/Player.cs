@@ -101,7 +101,7 @@ namespace MultiplayerEngine
                     DateTime renderTimestamp = now - TimeSpan.FromMilliseconds(1000.0f / GameWorld.Instance.gameClient.ServerUpdateRate);
 
                     // Drop older positions.
-                    while (positionBuffer.Count >= 2 && positionBuffer[1].timestamp <= renderTimestamp)
+                    while (positionBuffer.Count > 2 && positionBuffer[1].timestamp <= renderTimestamp)
                     {
                         positionBuffer.RemoveAt(0);
                     }
