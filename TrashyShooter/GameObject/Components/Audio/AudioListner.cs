@@ -19,7 +19,7 @@ namespace MultiplayerEngine
         {
             AudioManager.audioListener.Position = gameObject.transform.Position3D;
             AudioManager.audioListener.Forward = Vector3.Transform(
-                Vector3.Up,
+                transform.Position3D,
                 Matrix.CreateRotationZ(MathHelper.ToRadians(transform.Rotation.Z + 90)));
         }
     }
