@@ -19,10 +19,12 @@ namespace MultiplayerEngine
         {
             healthText = new GameObject().AddComponent<TextRenderer>();
             healthText.TextPivot = TextRenderer.TextPivots.TopLeft;
+            healthText.SetTextSize(3);
             healthText.color = Color.White;
 
             ammoText = new GameObject().AddComponent<TextRenderer>();
             ammoText.TextPivot = TextRenderer.TextPivots.TopLeft;
+            ammoText.SetTextSize(3);
             ammoText.color = Color.Red;
             ammoText.transform.Position = new Vector2(0, 50);
 
