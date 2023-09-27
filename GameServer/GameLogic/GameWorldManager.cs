@@ -41,6 +41,7 @@ namespace GameServer
         {
             countdownTimer.Elapsed += OnGameStartCountdownTick;
             StartCountdown();
+
         }
 
         // Start 5-second countdown for game end warning

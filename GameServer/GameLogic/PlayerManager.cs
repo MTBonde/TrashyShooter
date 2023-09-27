@@ -133,5 +133,10 @@ namespace GameServer
             player.InvokeOnAmmoChanged();
 
         }
+
+        public void ResetPlayer(byte id)
+        {            
+            players[id] = new PlayerInfo(id);
+        }
     }
 }
