@@ -8,11 +8,11 @@ namespace REST_API.Controllers
     [Route("api/[controller]")]
     public class ScoreboardController : ControllerBase
     {
-        private readonly Dictionary<int, ScoreboardModel> _scoreboard;
+        private static  Dictionary<int, ScoreboardModel> _scoreboard = new Dictionary<int, ScoreboardModel>();
 
         public ScoreboardController()
         {
-            _scoreboard = new Dictionary<int, ScoreboardModel>();
+
         }
 
 

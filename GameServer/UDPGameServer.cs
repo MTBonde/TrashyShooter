@@ -50,6 +50,8 @@ namespace GameServer
             RestManager.SetupRest();
 
             playerManager.OnPlayerStatChanged += UpdatePlayerInfo;
+
+            
         }
 
         //TODO: flyt et bedre sted hen

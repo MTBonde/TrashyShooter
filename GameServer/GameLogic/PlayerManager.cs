@@ -44,6 +44,10 @@ namespace GameServer
             // Tilføj spiller til dictionary
             players.TryAdd(id, newPlayer);
 
+        }
+
+        public async Task RESTPost(byte id, string name)
+        {
             ScoreboardModel score = new ScoreboardModel
             {
                 ID = id,
@@ -57,7 +61,7 @@ namespace GameServer
                 HttpResponseMessage response = await RestManager.GetRestClient().PostAsync("PostScore", content);
                 Console.WriteLine("added data to rest: " + response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("error on sending data to rest api\n" + ex.ToString());
                 return;
