@@ -12,7 +12,9 @@ namespace GameServer
     /// </summary>
     public static class CollisionManager
     {
-        // Liste over alle colliders i spillet, bør gøres privat eller readonly
+        /// <summary>
+        /// Liste over alle colliders i spillet.
+        /// </summary>
         public static List<Collider> colliders = new List<Collider>();
 
         /// <summary>

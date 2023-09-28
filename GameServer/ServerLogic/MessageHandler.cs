@@ -38,10 +38,7 @@ namespace GameServer
                // { MessageType.Heartbeat, HandleHeartbeat },
               //  { MessageType.PlayerJoined, HandlePlayerJoined },
                 { MessageType.PlayerLeft, HandlePlayerLeft },
-                { MessageType.PlayerUpdate, HandlePlayerUpdate },
-                //{ MessageType.PlayerSnapShot, HandlePlayerSnapShot },
-               // { MessageType.PlayerInfoUpdate, HandlePlayerInfoUpdate },
-                //{ MessageType.LaserShot, HandleLaserShot },              
+                { MessageType.PlayerUpdate, HandlePlayerUpdate },        
                 //{ MessageType.Error, HandleError },
                 { MessageType.Acknowledgement, HandleAcknowledgement },
                 //{ MessageType.res4, Handleres4 }
@@ -147,6 +144,11 @@ namespace GameServer
             // Delegate to GLC
             await gameLogicController.HandlePlayerUpdate(update, playerID);
         }
+
+
+
+
+
 
         private async Task HandleAcknowledgement((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
