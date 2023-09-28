@@ -87,6 +87,12 @@
 /processorParam:TextureFormat=Compressed
 /build:Cube.fbx
 
+#begin epic game niel.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:epic game niel.wav
+
 #begin floor.fbx
 /importer:FbxImporter
 /processor:ModelProcessor

@@ -19,7 +19,7 @@ namespace MultiplayerEngine
         /// </summary>
         public static void LoadMusic()
         {
-            //music = GameWorld.Instance.Content.Load<SoundEffect>("creepy_music");
+            music = GameWorld.Instance.Content.Load<SoundEffect>("epic game niel");
             //ingame = GameWorld.Instance.Content.Load<SoundEffect>("SoundFX\\creepy_sound");
         }
 
@@ -38,6 +38,7 @@ namespace MultiplayerEngine
                 musicSource = ingame.CreateInstance();
             }
             musicSource.Volume = 0.1f;
+            musicSource.IsLooped = true;
             musicSource.Play();
         }
 

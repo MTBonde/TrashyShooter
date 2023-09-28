@@ -18,6 +18,8 @@ namespace MultiplayerEngine
 
         public override void SetupScene()
         {
+            AudioManager.StartBackgroundMusic();
+
             errorText = new GameObject().AddComponent<TextRenderer>();
             errorText.color = Color.Red;
             errorText.scale = 2;
