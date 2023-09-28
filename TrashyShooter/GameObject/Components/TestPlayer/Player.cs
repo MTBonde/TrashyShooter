@@ -217,8 +217,13 @@ namespace MultiplayerEngine
                             update.jump = keyState.IsKeyDown(Keys.Space);
                         if (lastMouseState.LeftButton.HasFlag(ButtonState.Pressed) != mouseState.LeftButton.HasFlag(ButtonState.Pressed))
                         {
-                            update.shoot = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
-                            update.PriorityMessage = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
+                            if (hud.ammo > 0)
+                            {
+                                update.shoot = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
+                                update.PriorityMessage = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
+                            }
+                            else
+                                update.shoot = false;
                         }
                         else
                             update.shoot = false;

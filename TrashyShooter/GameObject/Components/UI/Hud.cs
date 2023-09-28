@@ -12,6 +12,7 @@ namespace MultiplayerEngine
 
         TextRenderer healthText;
         int health;
+        public int ammo;
         TextRenderer ammoText;
         AudioSouce takeDammageSound;
         SpriteRenderer healthbar;
@@ -73,6 +74,7 @@ namespace MultiplayerEngine
             if (update.health < health)
                 takeDammageSound.Play();
             health = update.health;
+            ammo = update.ammo;
         }
     }
 }

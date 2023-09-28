@@ -15,6 +15,7 @@ namespace MultiplayerEngine
         /// the model that this meshrenderer is displaying
         /// </summary>
         private Model _model;
+        public float scale = 1;
         #endregion
 
         #region Methods
@@ -45,7 +46,8 @@ namespace MultiplayerEngine
                     CameraManager.ApplyWorldShading(effect);
 
                     effect.View = SceneManager.active_scene.viewMatrix;
-                    effect.World = SceneManager.active_scene.worldMatrix * 
+                    effect.World = SceneManager.active_scene.worldMatrix *
+                        Matrix.CreateScale(scale, scale, scale) *
                         Matrix.CreateRotationX(MathHelper.ToRadians(transform.Rotation.X)) * 
                         Matrix.CreateRotationY(MathHelper.ToRadians(transform.Rotation.Y)) *
                         Matrix.CreateRotationZ(MathHelper.ToRadians(transform.Rotation.Z)) * 
