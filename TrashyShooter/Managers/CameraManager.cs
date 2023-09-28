@@ -31,7 +31,7 @@ namespace MultiplayerEngine
 
             effect.FogEnabled = !Globals.DebugModeToggled;
             effect.FogColor = Color.Black.ToVector3();
-            effect.FogStart = 3f;
+            effect.FogStart = 0f;
             effect.FogEnd = 10f;
         }
 
