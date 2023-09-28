@@ -149,11 +149,22 @@ namespace MultiplayerEngine
 
         public static void SetupRest(string address)
         {
-            restClient = new HttpClient
+            if (address == "")
             {
-                BaseAddress = new Uri("https://localhost:7159/api/Scoreboard/"),
-                Timeout = TimeSpan.FromSeconds(10)
-            };
+                restClient = new HttpClient
+                {
+                    BaseAddress = new Uri("https://localhost:7159/api/Scoreboard/"),
+                    Timeout = TimeSpan.FromSeconds(10)
+                };
+            }
+            else
+            {
+                restClient = new HttpClient
+                {
+                    BaseAddress = new Uri($"https://{address}:7159/api/Scoreboard/"),
+                    Timeout = TimeSpan.FromSeconds(10)
+                };
+            }
         }
 
         public static HttpClient GetRestClient()
