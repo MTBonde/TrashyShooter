@@ -172,8 +172,15 @@ namespace GameServer
         /// </summary>
         /// <param name="id"></param>
         public void ResetPlayer(byte id)
-        {            
-            players[id] = new PlayerInfo(id);
+        {
+            PlayerInfo player = players[id];
+            player.pos = spawnPoint;
+            player.health = 100;
+            player.ammoInMagazine = player.maxAmmo;
+            player.isReloading = false;
+            player.playerCol.position = player.pos;
+            player.InvokeOnHealthChanged();
+            player.InvokeOnAmmoChanged();
         }
     }
 }
