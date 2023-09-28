@@ -40,7 +40,10 @@ namespace GameServer
         /// <param name="priority">The priority level of the message.</param>
         /// <param name="clientEP">The endpoint of the client to send the message to.</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        public static async Task SendAsync<T>(T message, MessageType messageType, MessagePriority priority, IPEndPoint clientEP) where T : NetworkMessage
+        public static async Task SendAsync<T>(T message,
+                                              MessageType messageType,
+                                              MessagePriority priority,
+                                              IPEndPoint clientEP) where T : NetworkMessage
         {
             // Bruger NetworkMessageProtocol til at lave en samlet serialiseret netværksbesked
             (byte[] MessageBytes, int Length, IPEndPoint ClientEP) networkMessage = NetworkMessageProtocol.SendNetworkMessage(message,
