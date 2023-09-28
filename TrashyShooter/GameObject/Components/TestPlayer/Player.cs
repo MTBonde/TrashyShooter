@@ -77,10 +77,12 @@ namespace MultiplayerEngine
                 serverMidComment.transform.Position = Globals.ScreenCenter;
                 serverMidComment.scale = 5;
                 serverMidComment.color = Color.Red;
+                serverMidComment.SetText("");
                 serverTopComment = new GameObject().AddComponent<TextRenderer>();
                 serverTopComment.transform.Position = new Vector2(Globals.ScreenCenter.X, 50);
                 serverTopComment.scale = 3;
                 serverTopComment.color = Color.Red;
+                serverTopComment.SetText("");
                 sender.ServerInfo += UpdateServerComment;
             }
             else
