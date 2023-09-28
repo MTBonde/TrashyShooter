@@ -5,17 +5,17 @@ using MessagePack;
 namespace SharedData
 {
     /// <summary>
-    /// Static Helper Methods for Encoding, Decoding Serialization and De-serialization.
+    /// Indeholder statiske hjælpemetoder til kodning, dekodning, serialisering og deserialisering af netværksbeskeder.
     /// </summary>
     public class NetworkMessageProtocol
     {
         /// <summary>
-        /// Encodes the message header by combining the message type, priority, and any extra bits into a single byte.
+        /// Koder beskedheaderen ved at kombinere beskedtypen, prioriteten og eventuelle ekstra bits i en enkelt byte.
         /// </summary>
-        /// <param name="messageType">The type of the message.</param>
-        /// <param name="priority">The priority level of the message.</param>
-        /// <param name="extraBits">Any extra bits that need to be included in the header.</param>
-        /// <returns>The encoded header as a byte.</returns>
+        /// <param name="messageType">Typen af beskeden.</param>
+        /// <param name="priority">Beskedens prioritetsniveau.</param>
+        /// <param name="extraBits">Eventuelle ekstra bits, der skal inkluderes i headeren.</param>
+        /// <returns>Den kodede header som en byte.</returns>
         public static byte EncodeHeader(MessageType messageType, MessagePriority priority, byte extraBits)
         {
             // Denne linje koder en header-byte, der kombinerer beskedprioritet, beskedtype og eventuelle ekstra bits.
@@ -29,10 +29,10 @@ namespace SharedData
         }
 
         /// <summary>
-        /// Decodes the message header, extracting the message type, priority, and any extra bits from a single byte.
+        /// Dekoder beskedheaderen og udtrækker beskedtypen, prioriteten og eventuelle ekstra bits fra en enkelt byte.
         /// </summary>
-        /// <param name="header">The encoded header as a byte.</param>
-        /// <returns>A tuple containing the decoded message type, priority, and extra bits.</returns>
+        /// <param name="header">Den kodede header som en byte.</param>
+        /// <returns>En tuple med den dekodede beskedtype, prioritet og ekstra bits.</returns>
         public static (MessageType, MessagePriority, byte) DecodeHeader(byte header)
         {
             // Forskyder header med 7 bits til højre for at isolere priority-bit'et.
@@ -52,11 +52,11 @@ namespace SharedData
         }
 
         /// <summary>
-        /// Serializes the message object into a byte array using MessagePack.
+        /// Serialiserer beskedsobjektet til et byte-array ved hjælp af MessagePack.
         /// </summary>
-        /// <typeparam name="T">The type of the message object.</typeparam>
-        /// <param name="message">The message object to serialize.</param>
-        /// <returns>The serialized byte array.</returns>
+        /// <typeparam name="T">Typen af beskedsobjektet.</typeparam>
+        /// <param name="message">Beskedsobjektet, der skal serialiseres.</param>
+        /// <returns>Den serialiserede byte-array.</returns>
         public static byte[] SerializeMessage<T>(T message)
         {
             // Serialiserer beskedobjektet til en byte-array med MessagePack
@@ -64,11 +64,11 @@ namespace SharedData
         }
 
         /// <summary>
-        /// Deserializes a byte array back into a message object using MessagePack.
+        /// De-Serialiserer et byte-array tilbage til et beskedsobjekt ved hjælp af MessagePack.
         /// </summary>
-        /// <typeparam name="T">The type of the message object.</typeparam>
-        /// <param name="messageBytes">The byte array to deserialize.</param>
-        /// <returns>The deserialized message object.</returns>
+        /// <typeparam name="T">Typen af beskedsobjektet.</typeparam>
+        /// <param name="messageBytes">Byte-arrayen, der skal dekodes.</param>
+        /// <returns>Det dekodede beskedsobjekt.</returns>
         public static T DeserializeMessage<T>(byte[] messageBytes)
         {
             // Dekoder byte-array tilbage til et beskedobjekt med MessagePack
@@ -77,13 +77,13 @@ namespace SharedData
 
 
         /// <summary>
-        /// Creates a network message by encoding the header and serializing the message object.
+        /// Opretter en netværksbesked ved at kode headeren og serialisere beskedsobjektet.
         /// </summary>
-        /// <param name="message">The message object.</param>
-        /// <param name="messageType">Type of the message.</param>
-        /// <param name="priority">Priority level of the message.</param>
-        /// <param name="clientEP">Client endpoint.</param>
-        /// <returns>A tuple containing the message bytes, the length of the message, and the client endpoint.</returns>
+        /// <param name="message">Beskedsobjektet.</param>
+        /// <param name="messageType">Typen af beskeden.</param>
+        /// <param name="priority">Prioritetsniveauet for beskeden.</param>
+        /// <param name="clientEP">Klientens slutpunkt.</param>
+        /// <returns>En tuple med beskedsbytes, beskedens længde og klientens slutpunkt.</returns>
         public static (byte[] MessageBytes, int Length, IPEndPoint ClientEP) SendNetworkMessage<T> (T message,
                                                                                                 MessageType messageType,
                                                                                                 MessagePriority priority,
@@ -114,10 +114,10 @@ namespace SharedData
         }
 
         /// <summary>
-        /// Receives and decodes a network message that consists of a message, its type, and its priority.
+        /// Modtager og dekoder en netværksbesked, der består af en besked, dens type og dens prioritet.
         /// </summary>
-        /// <param name="receivedBytes">The received byte array.</param>
-        /// <returns>A tuple containing the decoded message, its type, and its priority.</returns>
+        /// <param name="receivedBytes">Den modtagne byte-array.</param>
+        /// <returns>En tuple med den dekodede besked, dens type og dens prioritet.</returns>
         public static (NetworkMessage message, MessageType Type, MessagePriority Priority) ReceiveNetworkMessage(byte[] receivedBytes)
         {
             // Trin 1: Dekoder headeren
