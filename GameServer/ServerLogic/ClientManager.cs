@@ -8,7 +8,9 @@ using SharedData;
 
 namespace GameServer
 {
-    // Klasse til at håndtere klientrelateret logik
+    /// <summary>
+    /// Klasse til at håndtere klientrelateret logik
+    /// </summary>
     public class ClientManager
     {
         // TODO: Clientmanager som singleton, med mindre det er tråd usikkert
@@ -70,20 +72,31 @@ namespace GameServer
             }
         }
 
-        // Få ID fra IPEndPoint
+        /// <summary>
+        /// Få ID fra IPEndPoint
+        /// </summary>
+        /// <param name="clientEndPoint"></param>
+        /// <returns></returns>
         public byte GetIDFromIPEndPoint(IPEndPoint clientEndPoint)
         {
             return clients.FirstOrDefault(entry => entry.Value.Equals(clientEndPoint)).Key;
         }
 
-        // 
+        /// <summary>
+        /// returnere klient Dictionary
+        /// </summary>
+        /// <returns></returns>        
         public ConcurrentDictionary<byte, IPEndPoint> GetClients()
         {
             return clients; // Return the existing ConcurrentDictionary of clients
         }
 
-
-        // Metode til at håndtere uventet frakobling af klient
+        /// <summary>
+        /// Metode til at håndtere uventet frakobling af klient
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="clientEndPoint"></param>
+        /// <returns></returns>
         public async Task HandleClientLeftUnexpectedly(SocketException e, IPEndPoint clientEndPoint)
         {
             Console.WriteLine("Player Left Unexpected");
@@ -100,9 +113,7 @@ namespace GameServer
             Console.WriteLine($"removed client : {clientEndPoint}");
 
             // Sender en besked til de andre klienter for at informere dem om frakoblingen.
-            PlayerLeft playerLeftMessage = new PlayerLeft { playerID = keyOfLeftUser };
-
-            // TODO: FIX DENNE !! await SendDataToClients(playerLeftMessage, MessageType.PlayerLeft, MessagePriority.Low);            
+            PlayerLeft playerLeftMessage = new PlayerLeft { playerID = keyOfLeftUser };            
 
             Console.WriteLine("send player left message to rest of Clients");
 
@@ -110,9 +121,6 @@ namespace GameServer
             clientEndPoint = null;
 
             Console.WriteLine($"exception : {e}");
-
-            // Opdaterer spilverdenens tilstand.
-            //world.PlayerLeft(keyOfLeftUser);
         }
     }
 }

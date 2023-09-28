@@ -15,7 +15,7 @@ namespace SharedData
     }
 
     [MessagePackObject]
-    public class Join : NetworkMessage
+    public class ClientHasJoined : NetworkMessage
     {
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ClientHasJoined;
@@ -25,20 +25,30 @@ namespace SharedData
     }
 
     [MessagePackObject]
-    public class Leave : NetworkMessage
-    {
-        [IgnoreMember]
-        public override MessageType MessageType => MessageType.ClientHasLeft;
-        //public override bool PriorityMessage { get; set; } = false;
-    }
-
-    [MessagePackObject]
-    public class JoinAnswer : NetworkMessage
+    public class ClientJoinAnswer : NetworkMessage
     {
         [Key(1)]
         public byte playerID;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ClientJoinAnswer;
+        //public override bool PriorityMessage { get; set; } = false;
+    }
+
+    [MessagePackObject]
+    public class ClientHasLeft : NetworkMessage
+    {
+        [IgnoreMember]
+        public override MessageType MessageType => MessageType.ClientHasLeft;
+        //public override bool PriorityMessage { get; set; } = false;
+    }
+    
+    [MessagePackObject]
+    public class ServerInfoMessage : NetworkMessage
+    {
+        [Key(1)]
+        public string ServerInformation;
+        [IgnoreMember]
+        public override MessageType MessageType => MessageType.ServerInfoMessage;
         //public override bool PriorityMessage { get; set; } = false;
     }
 

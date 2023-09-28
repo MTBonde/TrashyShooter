@@ -12,7 +12,9 @@ using SharedData;
 
 namespace GameServer
 {
-    // LagCompensationManager 
+    /// <summary>
+    /// LagCompensationManager 
+    /// </summary>
     public class LagCompensationManager
     {
         private readonly SnapshotManager snapshotManager;
@@ -24,7 +26,15 @@ namespace GameServer
             this.snapshotManager = snapshotManager;
         }
 
-        // Metode til for lag-kompenseret skud
+        /// <summary>
+        /// Metode for at beregne et lag-kompenseret skud
+        /// </summary>
+        /// <param name="timeOfShot">Skud tidspunkt</param>
+        /// <param name="playersCurrentInfo">Den der skød</param>
+        /// <param name="update"></param>
+        /// <param name="id"></param>
+        /// <param name="players"></param>
+        /// <returns></returns>
         public async Task PerformLagCompensatedShoot(DateTime timeOfShot, PlayerInfo playersCurrentInfo, PlayerUpdate update, byte id, ConcurrentDictionary<byte, PlayerInfo> players)
         {
             // Trin 1: Find nærmeste snapshots ved hjælp af SnapshotManager
@@ -85,7 +95,12 @@ namespace GameServer
 
         // Andre metoder og hjælpefunktioner for lag kompensation
 
-        // Metode til at sende shootConfirm besked
+        /// <summary>
+        /// Metode til at sende shootConfirm besked
+        /// </summary>
+        /// <param name="snapSeqId"></param>
+        /// <param name="hit"></param>
+        /// <param name="playerID"></param>
         public void SendShootConfirm(int snapSeqId, bool hit, byte? playerID)
         {
             // Kører den ene eller den anden WriteLine metode baseret på betingelsen 'hit'
@@ -100,6 +115,15 @@ namespace GameServer
 
         }
 
+        /// <summary>
+        /// Metoder der laver en interpolering mellem 2 tidspunkter, og tilstande, og returnere den interpolerede ttilstand
+        /// </summary>
+        /// <param name="beforeSnap"></param>
+        /// <param name="afterSnap"></param>
+        /// <param name="prev"></param>
+        /// <param name="after"></param>
+        /// <param name="timeOfShot"></param>
+        /// <returns></returns>
         public PlayerSnapShot[] EntityInterpolate(PlayerSnapShot[] beforeSnap, PlayerSnapShot[] afterSnap, DateTime prev, DateTime after, DateTime timeOfShot)
         {
             // Trin 1: Beregn interpolationsfaktor
@@ -136,7 +160,11 @@ namespace GameServer
             return interpolatedState;
         }
 
-        // Metode til at beregne retning baseret på rotationsvinkel
+        /// <summary>
+        /// Metode til at beregne retning baseret på rotationsvinkel
+        /// </summary>
+        /// <param name="rotZ"></param>
+        /// <returns></returns>
         public Vector3 CalculateDirection(float rotZ)
         {
             // Tilføj 90 grader til at justere for spil-specifik orientering

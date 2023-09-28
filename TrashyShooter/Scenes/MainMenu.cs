@@ -74,8 +74,8 @@ namespace MultiplayerEngine
             //TODO: make no server on IP error / Enter real IP
             GameWorld.Instance.gameClient.JoinServer(ipInput.input);
             SceneManager.LoadScene(1);
-            GameWorld.Instance.gameClient.SendDataToServer(new Join { playerName = nameInput.input });
             NetworkManager.SetupRest(ipInput.input);
+            GameWorld.Instance.gameClient.SendDataToServer(new ClientHasJoined { playerName = nameInput.input });
         }
 
         public void Exit()

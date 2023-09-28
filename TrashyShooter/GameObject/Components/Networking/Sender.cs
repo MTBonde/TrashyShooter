@@ -16,6 +16,7 @@ namespace MultiplayerEngine
         public Action<NetworkMessage> ScoreUpdate;
         public Action<NetworkMessage> HudUpdate;
         public Action<NetworkMessage> ChatUpdate;
+        public Action<NetworkMessage> ServerInfo;
 
         public void SetID(byte id)
         {
@@ -46,6 +47,9 @@ namespace MultiplayerEngine
                     break;
                 case MessageType.ChatMessage:
                     ChatUpdate?.Invoke((ChatMessage)message);
+                    break;
+                case MessageType.ServerInfoMessage:
+                    ServerInfo?.Invoke((ServerInfoMessage)message);
                     break;
             }
         }

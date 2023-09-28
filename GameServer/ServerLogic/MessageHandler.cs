@@ -7,11 +7,17 @@ namespace GameServer
 {
     public class MessageHandler
     {
-        // Delegeret til håndtering af beskeder
-        //public delegate Task MessageHandlerDelegate(byte[] dataToDeserialize, byte playerID);
+        /// <summary>
+        /// Delegate til håndtering af beskeder
+        /// </summary>
+        /// <param name="messageInfo"></param>
+        /// <param name="playerID"></param>
+        /// <returns></returns>
         public delegate Task MessageHandlerDelegate((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID);
 
-        // Dictionary til at mappe MessageType til den tilsvarende beskedhåndterer
+        /// <summary>
+        /// Dictionary til at mappe MessageType til den tilsvarende beskedhåndterer
+        /// </summary>
         private Dictionary<MessageType, MessageHandlerDelegate> messageHandlers;
 
         private ConcurrentDictionary<byte, IPEndPoint> clients;
@@ -32,24 +38,19 @@ namespace GameServer
                // { MessageType.Heartbeat, HandleHeartbeat },
               //  { MessageType.PlayerJoined, HandlePlayerJoined },
                 { MessageType.PlayerLeft, HandlePlayerLeft },
-                { MessageType.PlayerUpdate, HandlePlayerUpdate },
-                //{ MessageType.PlayerSnapShot, HandlePlayerSnapShot },
-               // { MessageType.PlayerInfoUpdate, HandlePlayerInfoUpdate },
-                //{ MessageType.LaserShot, HandleLaserShot },              
+                { MessageType.PlayerUpdate, HandlePlayerUpdate },        
                 //{ MessageType.Error, HandleError },
                 { MessageType.Acknowledgement, HandleAcknowledgement },
                 //{ MessageType.res4, Handleres4 }
             };
         }
 
-
-
         /// <summary>
-        /// Asynchronously handles incoming network messages by decoding them and invoking the appropriate message handler based on the message type.
+        /// Asynkron håndtering af indkomne beskeder, sorter dem og send dem videre til den korrekte handler alt efter beskedtype.
         /// </summary>
-        /// <param name="receivedData">The received byte array containing the message.</param>
-        /// <param name="playerID">The ID of the player who sent the message.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <param name="receivedData">The modtagne Byte Array med beskeden</param>
+        /// <param name="playerID">ID på afsender.</param>
+        /// <returns></returns>
 
         public async Task HandleIncomingMessage(byte[] receivedData, byte playerID)
         {
@@ -85,13 +86,13 @@ namespace GameServer
             Console.WriteLine($"Klient med ID {playerID} har tilsluttet sig.");
 
             // Opretter en ny Join-objekt for at håndtere spillerens indtræden i spillet
-            Join clientHasJoined = (Join)messageInfo.Message;
+            ClientHasJoined clientHasJoined = (ClientHasJoined)messageInfo.Message;
 
             // delegeret til GameController
             gameLogicController.HandleJoin(playerID, clientHasJoined.playerName);
 
             // Opretter et svar og en besked om, at en ny spiller er kommet ind i spillet
-            JoinAnswer answer = new JoinAnswer { playerID = playerID };
+            ClientJoinAnswer answer = new ClientJoinAnswer { playerID = playerID };
             PlayerJoined playerJoined = new PlayerJoined { playerID = playerID };
 
             // Finder klientens IPEndPoint fra ConcurrentDictionary
@@ -113,7 +114,7 @@ namespace GameServer
         private async Task HandleClientHasLeft((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Deserialiser dataene til en PlayerLeft-objekt
-            Leave clientHasLeft = (Leave)messageInfo.Message;
+            ClientHasLeft clientHasLeft = (ClientHasLeft)messageInfo.Message;
 
             // Delegate to GLC
             gameLogicController.HandlePlayerLeft(playerID);
@@ -142,7 +143,7 @@ namespace GameServer
             await gameLogicController.HandlePlayerUpdate(update, playerID);
         }
 
-        
+
 
 
 
@@ -164,6 +165,5 @@ namespace GameServer
 
             await Task.CompletedTask;
         }
-
     }
 }

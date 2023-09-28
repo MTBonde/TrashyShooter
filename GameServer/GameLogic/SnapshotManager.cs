@@ -9,7 +9,9 @@ using SharedData;
 
 namespace GameServer
 {
-    // En struct til at holde snapshotinformation
+    /// <summary>
+    /// En struct til at holde snapshotinformation
+    /// </summary>
     public struct SnapshotInfo
     {
         public PlayerSnapShot[] PrevSnap { get; set; }
@@ -17,6 +19,7 @@ namespace GameServer
         public DateTime PrevTime { get; set; }
         public DateTime AfterTime { get; set; }
     }
+
     public class SnapshotManager
     {
         // En variabel til at holde den seneste tid
@@ -28,7 +31,10 @@ namespace GameServer
         private ConcurrentDictionary<DateTime, PlayerSnapShot[]> playerSnapshots = new ConcurrentDictionary<DateTime, PlayerSnapShot[]>();
         private ConcurrentQueue<DateTime> snapshotOrder = new ConcurrentQueue<DateTime>();
 
-        // Metode til at tage et snapshot af spilverdenen
+        /// <summary>
+        /// Metode til at tage et snapshot af spilverdenen
+        /// </summary>
+        /// <param name="players"></param>
         public void TakeSnapshot(ConcurrentDictionary<byte, PlayerInfo> players)
         {
             DateTime currentTime = DateTime.UtcNow;
@@ -71,7 +77,12 @@ namespace GameServer
             }
         }
 
-        // Metode til at finde et par af snapshots baseret på en bestemt tid og spiller ID
+        /// <summary>
+        /// Metode til at finde et par af snapshots baseret på en bestemt tid og spiller ID
+        /// </summary>
+        /// <param name="targetTime"></param>
+        /// <param name="playerID"></param>
+        /// <returns></returns>
         public async Task<(PlayerSnapShot[] prevSnap, PlayerSnapShot[] afterSnap, DateTime prev, DateTime after)> GetSnapshot(DateTime targetTime, byte playerID)
         {
             DateTime beforeTime = new DateTime();
@@ -81,10 +92,7 @@ namespace GameServer
             PlayerSnapShot[] beforeSnap = null;
             PlayerSnapShot[] afterSnap = null;
 
-            //// await for at sikre at der er nået at tage et snap som kan bruges som after
-            //await Task.Delay(100);
-            // Vent, hvis nødvendigt, for at sikre at der er et tilgængeligt snapshot
-            
+            // Vent, hvis nødvendigt, for at sikre at der er et tilgængeligt snapshot            
             await Task.Delay(100);
 
             foreach(KeyValuePair<DateTime, PlayerSnapShot[]> snapshot in playerSnapshots)
@@ -108,7 +116,10 @@ namespace GameServer
             return (beforeSnap, afterSnap, beforeTime, afterTime);
         }
 
-        // Metode til at returnere det nyeste snapshot af spilverdenen
+        /// <summary>
+        /// Metode til at returnere det nyeste snapshot af spilverdenen
+        /// </summary>
+        /// <returns></returns>
         public PlayerSnapShot[] GetLatestWorldStateSnapshot()
         {
             // Returner det seneste snapshot 

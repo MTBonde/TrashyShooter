@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 using SharedData;
 
@@ -50,30 +45,32 @@ namespace GameServer
             // Convert integers to Vector3
             Vector3 respawnPosition = new Vector3(randomX, randomY, 0);
 
-            // Iterate over the dictionary and respawn each player
-            foreach(var entry in playerManager.players)
+            // 
+            for(int i = 0; i < playerManager.players.Count; i++)
             {
-                byte playerId = entry.Key;                
+                byte playerId = playerManager.players[(byte)i].id;
 
                 // Use the generated coordinates to respawn the player
+                playerManager.ResetPlayer(playerId);
                 playerManager.RespawnPlayer(playerId, respawnPosition);
             }
         }
 
 
+
         private void OnGameRoundEnded()
         {
-            
+
         }
 
         private void OnCountdownTick(int remainingTime)
         {
-            
+
         }
 
         private void OnCountdownStarted(int countdown)
         {
-            
+
         }
 
         public void HandleJoin(byte playerID, string playerName)
@@ -81,6 +78,13 @@ namespace GameServer
             playerManager.AddPlayer(playerID, playerName);
             playerManager.players[playerID].OnDeath += HandlePlayerDeath;
             playerManager.RESTPost(playerID, playerName);
+        
+
+            if(playerManager.players.Count >= 1 && !gameWorldManager.GameRoundStartet)
+            {
+                gameWorldManager.StartGameStartCountdown();              
+
+            }
         }
 
         public async Task HandlePlayerUpdate(PlayerUpdate update, byte playerID)

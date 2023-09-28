@@ -27,7 +27,7 @@ namespace MultiplayerEngine
             Graphics = new GraphicsDeviceManager(this);
             Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //Graphics.IsFullScreen = true;
+            Graphics.IsFullScreen = false;
             Graphics.ApplyChanges();
             this.IsFixedTimeStep = false;//false;
             this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 120d); //60);
@@ -78,7 +78,7 @@ namespace MultiplayerEngine
             //Disconnects to server if in a game
             if(SceneManager.active_scene.GetType() == typeof(TestScene))
             {
-                Leave leaveMessage = new Leave();
+                ClientHasLeft leaveMessage = new ClientHasLeft();
                 gameClient.SendDataToServer(leaveMessage);
             }
             base.OnExiting(sender, args);

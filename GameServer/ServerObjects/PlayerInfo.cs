@@ -104,7 +104,7 @@ namespace GameServer
                 Vector3 shootingDirection = new Vector3(MathF.Sin(radianRotY), 0, MathF.Cos(radianRotY));
                 // Reducer ammunition
                 ammoInMagazine--;
-                OnAmmoChanged.Invoke(ammoInMagazine);
+                OnAmmoChanged?.Invoke(ammoInMagazine);
             }
             else
             {
@@ -143,7 +143,7 @@ namespace GameServer
                 ammoInMagazine += ammoToReload;
                 spareAmmo -= ammoToReload;
 
-                OnAmmoChanged.Invoke(ammoInMagazine);
+                OnAmmoChanged?.Invoke(ammoInMagazine);
 
                 isReloading = false;
             });
