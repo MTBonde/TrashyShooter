@@ -193,6 +193,12 @@
 /processorParam:TextureFormat=Compressed
 /build:Particle.fbx
 
+#begin Reload.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Reload.wav
+
 #begin ScifiWall.fbx
 /importer:FbxImporter
 /processor:ModelProcessor

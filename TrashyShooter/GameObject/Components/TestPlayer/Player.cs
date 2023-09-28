@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using SharedData;
+using SharpDX.MediaFoundation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,8 @@ namespace MultiplayerEngine
         ScoreBoard scoreBoard;
         InputField chatField;
         TextRenderer chat;
-        AudioSouce walking;
+        AudioSouce walking, reloadSound;
+        Stopwatch reloadTimer = new Stopwatch();
 
         TextRenderer serverMidComment, serverTopComment;
 
@@ -68,6 +70,8 @@ namespace MultiplayerEngine
                 walking = gameObject.AddComponent<AudioSouce>();
                 walking.SetSoundEffect("walking");
                 walking.loop = true;
+                reloadSound = gameObject.AddComponent<AudioSouce>();
+                reloadSound.SetSoundEffect("Reload");
 
                 serverMidComment = new GameObject().AddComponent<TextRenderer>();
                 serverMidComment.transform.Position = Globals.ScreenCenter;
@@ -215,7 +219,22 @@ namespace MultiplayerEngine
                         update.right = keyState.IsKeyDown(Keys.A);
                         if (lastKeyboardState.IsKeyDown(Keys.Space) != keyState.IsKeyDown(Keys.Space))
                             update.jump = keyState.IsKeyDown(Keys.Space);
-                        if (lastMouseState.LeftButton.HasFlag(ButtonState.Pressed) != mouseState.LeftButton.HasFlag(ButtonState.Pressed))
+                        if (reloadTimer.IsRunning && reloadTimer.ElapsedMilliseconds > 2000)
+                        {
+                            reloadTimer.Reset();
+                        }
+                        if (lastKeyboardState.IsKeyDown(Keys.R) != keyState.IsKeyDown(Keys.R))
+                        {
+                            if (!reloadTimer.IsRunning)
+                            {
+                                reloadTimer.Start();
+                                reloadSound.Play();
+                                update.reload = keyState.IsKeyDown(Keys.R);
+                            }
+                        }
+                        else
+                            update.reload = false;
+                        if (lastMouseState.LeftButton.HasFlag(ButtonState.Pressed) != mouseState.LeftButton.HasFlag(ButtonState.Pressed) && !reloadTimer.IsRunning)
                         {
                             if (hud.ammo > 0)
                             {
@@ -227,10 +246,6 @@ namespace MultiplayerEngine
                         }
                         else
                             update.shoot = false;
-                        if (lastKeyboardState.IsKeyDown(Keys.R) != keyState.IsKeyDown(Keys.R))
-                            update.reload = keyState.IsKeyDown(Keys.R);
-                        else
-                            update.reload = false;
                         update.rotZ = transform.Rotation.Z;
                         update.rotY = transform.Rotation.Y;
                         update.SnapSeqId = nextSeqNum;
