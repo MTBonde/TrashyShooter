@@ -98,17 +98,18 @@ namespace GameServer
         public void Shoot()
         {
             // Tjek ammunition
-            if(ammoInMagazine > 0)
-            {                
+            if(ammoInMagazine <= 0)
+            {
+                // TODO: Ingen ammunition. click click sound??
+                Console.WriteLine("Click click, no ammo!");
+            }
+            else
+            {
                 float radianRotY = rotY * (MathF.PI / 180.0f);
                 Vector3 shootingDirection = new Vector3(MathF.Sin(radianRotY), 0, MathF.Cos(radianRotY));
                 // Reducer ammunition
                 ammoInMagazine--;
                 OnAmmoChanged?.Invoke(ammoInMagazine);
-            }
-            else
-            {
-                // TODO: Ingen ammunition. click click sound??
             }
         }
 

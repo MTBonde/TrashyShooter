@@ -92,7 +92,7 @@ namespace GameServer
             playerManager.UpdatePlayerState(playerID, update);
             playerManager.UpdatePlayerInfo(playerID);
 
-            if(update.shoot)
+            if(update.shoot && playerManager.players[playerID].ammoInMagazine > 0)
             {
                 //TODO: send ping from client and use in sytract for delay
                 // Perform lag-compensated shooting logic
