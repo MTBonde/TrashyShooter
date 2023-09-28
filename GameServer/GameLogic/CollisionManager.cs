@@ -7,13 +7,24 @@ using System.Threading.Tasks;
 
 namespace GameServer
 {
-    // Håndterer kollisionsdetektion i spillet
+    /// <summary>
+    /// Håndterer kollisionsdetektion i spillet
+    /// </summary>
     public static class CollisionManager
     {
         // Liste over alle colliders i spillet, bør gøres privat eller readonly
         public static List<Collider> colliders = new List<Collider>();
 
-        // Metode til at kontrollere cirkelkollisioner
+        /// <summary>
+        /// Metode til at kontrollere cirkelkollisioner
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="radius"></param>
+        /// <param name="height"></param>
+        /// <param name="colliderToIgnore"></param>
+        /// <param name="collidersToUse"></param>
+        /// <returns></returns>
         public static CollisionInfo CheckCircleCollision(Vector3 start, Vector3 end, float radius, float height, Collider colliderToIgnore, List<Collider> collidersToUse = null)
         {
             if(collidersToUse == null) collidersToUse = colliders;
@@ -39,7 +50,14 @@ namespace GameServer
             return col;
         }
 
-        // Metode til at udføre raycasting fra start til slutpunkt
+        /// <summary>
+        /// Metode til at udføre raycasting fra start til slutpunkt
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="colliderToIgnore"></param>
+        /// <param name="collidersToUse"></param>
+        /// <returns></returns>
         public static CollisionInfo RayCast(Vector3 start, Vector3 end, Collider colliderToIgnore, List<Collider> collidersToUse = null)
         {
             // Beregner retningen
@@ -77,5 +95,4 @@ namespace GameServer
             return new CollisionInfo { collider = null };
         }
     }
-
 }

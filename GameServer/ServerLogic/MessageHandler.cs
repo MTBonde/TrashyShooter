@@ -7,11 +7,17 @@ namespace GameServer
 {
     public class MessageHandler
     {
-        // Delegeret til håndtering af beskeder
-        //public delegate Task MessageHandlerDelegate(byte[] dataToDeserialize, byte playerID);
+        /// <summary>
+        /// Delegate til håndtering af beskeder
+        /// </summary>
+        /// <param name="messageInfo"></param>
+        /// <param name="playerID"></param>
+        /// <returns></returns>
         public delegate Task MessageHandlerDelegate((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID);
 
-        // Dictionary til at mappe MessageType til den tilsvarende beskedhåndterer
+        /// <summary>
+        /// Dictionary til at mappe MessageType til den tilsvarende beskedhåndterer
+        /// </summary>
         private Dictionary<MessageType, MessageHandlerDelegate> messageHandlers;
 
         private ConcurrentDictionary<byte, IPEndPoint> clients;
@@ -45,11 +51,11 @@ namespace GameServer
 
 
         /// <summary>
-        /// Asynchronously handles incoming network messages by decoding them and invoking the appropriate message handler based on the message type.
+        /// Asynkron håndtering af indkomne beskeder, sorter dem og send dem videre til den korrekte handler alt efter beskedtype.
         /// </summary>
-        /// <param name="receivedData">The received byte array containing the message.</param>
-        /// <param name="playerID">The ID of the player who sent the message.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <param name="receivedData">The modtagne Byte Array med beskeden</param>
+        /// <param name="playerID">ID på afsender.</param>
+        /// <returns></returns>
 
         public async Task HandleIncomingMessage(byte[] receivedData, byte playerID)
         {
@@ -142,11 +148,6 @@ namespace GameServer
             await gameLogicController.HandlePlayerUpdate(update, playerID);
         }
 
-        
-
-
-
-
         private async Task HandleAcknowledgement((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Try to cast the incoming message to Acknowledgement. If it fails, ack will be null.
@@ -164,6 +165,5 @@ namespace GameServer
 
             await Task.CompletedTask;
         }
-
     }
 }

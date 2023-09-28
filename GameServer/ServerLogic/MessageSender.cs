@@ -15,6 +15,12 @@ namespace GameServer
 
         private static object lockObject = new object();
 
+        /// <summary>
+        /// klasse der starter den statisk sender klasse
+        /// </summary>
+        /// <param name="udpServer"></param>
+        /// <param name="clientManager"></param>
+        /// <param name="snapshotManager"></param>
         public static void Initialize(UdpClient udpServer, ClientManager clientManager, SnapshotManager snapshotManager)
         {
             lock(lockObject)
@@ -33,7 +39,7 @@ namespace GameServer
         
 
         /// <summary>
-        /// Asynchronously sends a message to a client using the specified message type and priority.
+        /// Asynkron afsender en besked med specefik type og prioritet.
         /// </summary>
         /// <param name="message">The message object to send.</param>
         /// <param name="messageType">The type of the message.</param>
@@ -58,7 +64,14 @@ namespace GameServer
         }
 
 
-        // Send to all clients
+        /// <summary>
+        /// Sender til alle klienter
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="message"></param>
+        /// <param name="messageType"></param>
+        /// <param name="priority"></param>
+        /// <returns></returns>
         public static async Task SendDataToClients<T>(T message, MessageType messageType, MessagePriority priority) where T : NetworkMessage
         {
             // Use the ClientManager to get the client list
@@ -69,6 +82,15 @@ namespace GameServer
             }
         }
 
+        /// <summary>
+        /// Sender til alle undtagen en
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="message"></param>
+        /// <param name="messageType"></param>
+        /// <param name="priority"></param>
+        /// <param name="exceptionID"></param>
+        /// <returns></returns>
         public static async Task SendDataToClientsExceptOne<T>(T message, MessageType messageType, MessagePriority priority, byte exceptionID) where T : NetworkMessage
         {
             // Use the ClientManager to get the client list
@@ -110,7 +132,13 @@ namespace GameServer
             }
         }
 
-
+        /// <summary>
+        /// Sender en bekræftelse
+        /// </summary>
+        /// <param name="playerID"></param>
+        /// <param name="originalMessageType"></param>
+        /// <param name="messageId"></param>
+        /// <returns></returns>
         public static async Task SendAcknowledgment(byte playerID, MessageType originalMessageType, Guid messageId)
         {
             ConcurrentDictionary<byte, IPEndPoint> clients = clientManager.GetClients();
@@ -151,8 +179,6 @@ namespace GameServer
                 }
             }            
         }
-
-
 
 
         // TODO: Tracking of ack

@@ -8,7 +8,7 @@ using SharedData;
 namespace GameServer
 {
     /// <summary>
-    /// Administrerer spillere i et multiplayer-spil.
+    /// Administrerer spillere
     /// </summary>
     public class PlayerManager
     {
@@ -85,7 +85,11 @@ namespace GameServer
             UpdatePlayerStat(specificPlayer, playerId);
         }
 
-        // Generel metode til at opdatere en spillers stats
+        /// <summary>
+        /// Generel metode til at opdatere en spillers stats
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="id"></param>
         private void UpdatePlayerStat(PlayerInfo player, byte id)
         {
             // Opret opdateringsmeddelelse og udløs event
@@ -93,13 +97,19 @@ namespace GameServer
             OnPlayerStatChanged?.Invoke(updateMessage, id);
         }
 
-        // Håndterer en spillers død
+        /// <summary>
+        /// Håndterer en spillers død
+        /// </summary>
+        /// <param name="id"></param>
         private void HandlePlayerDeath(byte id)
         {
             RespawnPlayer(id);
         }
 
-        // Håndterer, når en spiller dræber en anden spiller
+        /// <summary>
+        /// Håndterer, når en spiller dræber en anden spiller
+        /// </summary>
+        /// <param name="id"></param>
         private void HandlePlayerKill(byte id)
         {
             if(players.TryGetValue(id, out PlayerInfo specificPlayer))
@@ -134,6 +144,10 @@ namespace GameServer
 
         }
 
+        /// <summary>
+        /// Nultil en spiller
+        /// </summary>
+        /// <param name="id"></param>
         public void ResetPlayer(byte id)
         {            
             players[id] = new PlayerInfo(id);

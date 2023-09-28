@@ -9,7 +9,6 @@ namespace GameServer
     {
         public delegate Task MessageHandlerDelegate((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID);
 
-        // Ordbog til at mappe MessageType til den tilsvarende beskedhåndterer
         private Dictionary<MessageType, MessageHandlerDelegate> chatMessageHandlers;
 
         private ClientManager clientManager;
@@ -28,11 +27,15 @@ namespace GameServer
             };
         }
 
+        /// <summary>
+        /// Metode der håndtere og sortere indkomne chat beskeder
+        /// </summary>
+        /// <param name="receivedData"></param>
+        /// <param name="playerID"></param>
+        /// <returns></returns>
         public async Task HandleIncomingMessage(byte[] receivedData, byte playerID)
         {
             (NetworkMessage message, MessageType messageType, MessagePriority messagePriority) = NetworkMessageProtocol.ReceiveNetworkMessage(receivedData);
-
-
 
             if(chatMessageHandlers.TryGetValue(messageType, out MessageHandlerDelegate handler))
             {
@@ -49,7 +52,12 @@ namespace GameServer
             }
         }
 
-        // Handles incoming chat message
+        /// <summary>
+        /// Chatbeskeder bliver bearbejdet her
+        /// </summary>
+        /// <param name="messageInfo"></param>
+        /// <param name="playerID"></param>
+        /// <returns></returns>
         private async Task HandleIncomingChatMessage((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Attempt to cast the incoming NetworkMessage to a ChatMessage type.
@@ -78,9 +86,12 @@ namespace GameServer
             await MessageSender.SendDataToClients(chatMessage, MessageType.ChatMessage, MessagePriority.High);
         }
 
-
-
-
+        /// <summary>
+        /// Chat Kommandoer bliver bearbejdet her
+        /// </summary>
+        /// <param name="messageInfo"></param>
+        /// <param name="playerID"></param>
+        /// <returns></returns>
         private async Task HandleIncomingChatCommand((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Deserialize the incoming data into a NetworkMessageCommands object           
@@ -146,6 +157,12 @@ namespace GameServer
             }
         }
 
+        /// <summary>
+        /// Chat Bekræftelse bliver bearbjdet her
+        /// </summary>
+        /// <param name="messageInfo"></param>
+        /// <param name="playerID"></param>
+        /// <returns></returns>
         private async Task HandleIncomingChatAcknowledgement((NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo, byte playerID)
         {
             // Try to cast the incoming message to ChatAcknowledgement. If it fails, chatAck will be null.
