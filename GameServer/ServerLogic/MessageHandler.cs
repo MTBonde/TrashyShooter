@@ -45,8 +45,6 @@ namespace GameServer
             };
         }
 
-
-
         /// <summary>
         /// Asynkron håndtering af indkomne beskeder, sorter dem og send dem videre til den korrekte handler alt efter beskedtype.
         /// </summary>
