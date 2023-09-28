@@ -19,7 +19,7 @@ namespace MultiplayerEngine
         /// <summary>
         /// the maximum distance the sound can be heard from
         /// </summary>
-        public float maxDistance = 10;
+        public float maxDistance = 100;
         /// <summary>
         /// detemines if the audiosouce should be spacialy affected
         /// </summary>
@@ -64,7 +64,7 @@ namespace MultiplayerEngine
         /// </summary>
         public void Update()
         {
-            if (running && !remove)
+            if (running && !remove && _soundEffectInstance != null)
             {
                 //sets sound position
                 _emitter.Position = transform.Position3D;

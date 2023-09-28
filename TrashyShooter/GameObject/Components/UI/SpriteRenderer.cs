@@ -14,6 +14,7 @@ namespace MultiplayerEngine
         private Texture2D sprite;
         public float layer;
         public float scale = 0.25f;
+        public Color color = Color.White;
         public Vector2 Origin { get; set; }
 
         public void SetSprite(string spriteName)
@@ -29,7 +30,7 @@ namespace MultiplayerEngine
                 Console.WriteLine("no Image on sprite renderer");
                 return;
             }
-            spriteBatch.Draw(sprite, gameObject.transform.Position, null, Color.White, 0, Origin, scale, SpriteEffects.None, layer);
+            spriteBatch.Draw(sprite, gameObject.transform.Position, null, color, 0, Origin, scale, SpriteEffects.None, layer);
         }
     }
 }
