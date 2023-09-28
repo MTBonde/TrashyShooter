@@ -2,8 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using REST_API;
 
 namespace MultiplayerEngine
 {
@@ -47,11 +51,13 @@ namespace MultiplayerEngine
         //    }
         //}
 
-        public void ShowScoreboard()
+        public async void ShowScoreboard()
         {
+            List<ScoreboardModel> scoreboardData = await NetworkManager.GetScoreboard();
             backgroundSprite.gameObject.enabled = true;
-            for (int i = 0; i < scores.Length; i++)
+            for (int i = 0; i < scoreboardData.Count; i++)
             {
+                scores[i].SetText(scoreboardData[i].playerName + ":" + scoreboardData[i].score);
                 scores[i].gameObject.enabled = true;
             }
         }

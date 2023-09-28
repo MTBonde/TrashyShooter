@@ -75,6 +75,7 @@ namespace MultiplayerEngine
             GameWorld.Instance.gameClient.JoinServer(ipInput.input);
             SceneManager.LoadScene(1);
             GameWorld.Instance.gameClient.SendDataToServer(new Join { playerName = nameInput.input });
+            NetworkManager.SetupRest(ipInput.input);
         }
 
         public void Exit()

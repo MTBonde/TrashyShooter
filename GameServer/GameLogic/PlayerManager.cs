@@ -1,8 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using System.Numerics;
-
-
-
+using System.Text;
+using System.Text.Json;
+using REST_API;
 using SharedData;
 
 namespace GameServer
@@ -28,7 +28,7 @@ namespace GameServer
         /// </summary>
         /// <param name="id">Spillerens unikke ID.</param>
         /// <param name="name">Spillerens navn.</param>
-        public void AddPlayer(byte id, string name)
+        public async void AddPlayer(byte id, string name)
         {
             // Opret ny spiller
             PlayerInfo newPlayer = new PlayerInfo(id) { name = name };
@@ -43,6 +43,29 @@ namespace GameServer
 
             // Tilføj spiller til dictionary
             players.TryAdd(id, newPlayer);
+
+        }
+
+        public async Task RESTPost(byte id, string name)
+        {
+            ScoreboardModel score = new ScoreboardModel
+            {
+                ID = id,
+                playerName = name,
+                score = 0
+            };
+            string json = JsonSerializer.Serialize(score);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            try
+            {
+                HttpResponseMessage response = await RestManager.GetRestClient().PostAsync("PostScore", content);
+                Console.WriteLine("added data to rest: " + response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error on sending data to rest api\n" + ex.ToString());
+                return;
+            }
         }
 
         /// <summary>

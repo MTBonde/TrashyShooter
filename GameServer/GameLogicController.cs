@@ -80,7 +80,7 @@ namespace GameServer
         {
             playerManager.AddPlayer(playerID, playerName);
             playerManager.players[playerID].OnDeath += HandlePlayerDeath;
-
+            playerManager.RESTPost(playerID, playerName);
         }
 
         public async Task HandlePlayerUpdate(PlayerUpdate update, byte playerID)

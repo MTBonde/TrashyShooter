@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Text;
 using SharedData;
+using REST_API;
+using System.Text.Json;
 
 namespace MultiplayerEngine
 {
@@ -142,8 +144,61 @@ namespace MultiplayerEngine
         }
         #endregion
 
+        #region Rest
+        public static HttpClient restClient = new HttpClient();
+
+        public static void SetupRest(string address)
+        {
+            if (address == "")
+            {
+                restClient = new HttpClient
+                {
+                    BaseAddress = new Uri("https://localhost:7159/api/Scoreboard/"),
+                    Timeout = TimeSpan.FromSeconds(10)
+                };
+            }
+            else
+            {
+                restClient = new HttpClient
+                {
+                    BaseAddress = new Uri($"https://{address}:7159/api/Scoreboard/"),
+                    Timeout = TimeSpan.FromSeconds(10)
+                };
+            }
+        }
+
+        public static HttpClient GetRestClient()
+        {
+            return restClient;
+        }
+
+        public static async Task<List<ScoreboardModel>> GetScoreboard()
+        {
+            try
+            {
+                HttpResponseMessage response = await GetRestClient().GetAsync("GetScoreboard");
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonContent = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine(jsonContent);
+                    var scoreboard = JsonSerializer.Deserialize<List<ScoreboardModel>>(jsonContent);
+                    return scoreboard;
+                }
+                else 
+                { 
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                return null;
+            }
+        }
+        #endregion
+
         #region Database
-        public static readonly HttpClient client = new HttpClient();
+        public static readonly HttpClient databaseClient = new HttpClient();
 
         public static async void AddTimeScore(string name, string score, TextRenderer scoreBoardText)
         {
@@ -158,7 +213,7 @@ namespace MultiplayerEngine
             Console.WriteLine("web");
             try
             {
-                using HttpResponseMessage response = await client.PostAsync("https://dreamlikestudios.net/GameBackend/HorrorMaze/AddTimeScore.php", content);
+                using HttpResponseMessage response = await databaseClient.PostAsync("https://dreamlikestudios.net/GameBackend/HorrorMaze/AddTimeScore.php", content);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 // Above three lines can be replaced with new helper method below
@@ -185,7 +240,7 @@ namespace MultiplayerEngine
             Console.WriteLine("web");
             try
             {
-                using HttpResponseMessage response = await client.PostAsync("https://dreamlikestudios.net/GameBackend/HorrorMaze/GetTimeScores.php", content);
+                using HttpResponseMessage response = await databaseClient.PostAsync("https://dreamlikestudios.net/GameBackend/HorrorMaze/GetTimeScores.php", content);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 // Above three lines can be replaced with new helper method below
@@ -215,7 +270,7 @@ namespace MultiplayerEngine
             Console.WriteLine("web");
             try
             {
-                using HttpResponseMessage response = await client.PostAsync("https://dreamlikestudios.net/GameBackend/HorrorMaze/AddFloorScore.php", content);
+                using HttpResponseMessage response = await databaseClient.PostAsync("https://dreamlikestudios.net/GameBackend/HorrorMaze/AddFloorScore.php", content);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 // Above three lines can be replaced with new helper method below
@@ -242,7 +297,7 @@ namespace MultiplayerEngine
             Console.WriteLine("web");
             try
             {
-                using HttpResponseMessage response = await client.PostAsync("https://dreamlikestudios.net/GameBackend/HorrorMaze/GetFloorScores.php", content);
+                using HttpResponseMessage response = await databaseClient.PostAsync("https://dreamlikestudios.net/GameBackend/HorrorMaze/GetFloorScores.php", content);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 // Above three lines can be replaced with new helper method below
