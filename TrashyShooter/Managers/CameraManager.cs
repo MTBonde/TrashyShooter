@@ -31,8 +31,8 @@ namespace MultiplayerEngine
 
             effect.FogEnabled = !Globals.DebugModeToggled;
             effect.FogColor = Color.Black.ToVector3();
-            effect.FogStart = 0f;
-            effect.FogEnd = 3f;
+            effect.FogStart = 3f;
+            effect.FogEnd = 10f;
         }
 
         public static void ApplyCameraEffects(SpriteBatch spriteBatch)
