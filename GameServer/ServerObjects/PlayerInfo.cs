@@ -6,6 +6,9 @@ using System.Text;
 
 namespace GameServer
 {
+    /// <summary>
+    /// Klasse der håndterer spillerinformation, begivenheder og adfærd i spillet.
+    /// </summary>
     public class PlayerInfo
     {
         // Events 
@@ -62,7 +65,17 @@ namespace GameServer
         public void InvokeOnHealthChanged() => OnHealthChanged?.Invoke(health);
         public void InvokeOnAmmoChanged() => OnAmmoChanged?.Invoke(ammoInMagazine);
 
-
+        /// <summary>
+        /// Flytter spilleren baseret på klient update
+        /// </summary>
+        /// <param name="up">Bevæger op, hvis sand.</param>
+        /// <param name="down">Bevæger ned, hvis sand.</param>
+        /// <param name="left">Bevæger til venstre, hvis sand.</param>
+        /// <param name="right">Bevæger til højre, hvis sand.</param>
+        /// <param name="jump">Udfører hop, hvis sand.</param>
+        /// <param name="newRotY">Ny Y-rotation.</param>
+        /// <param name="newRotZ">Ny Z-rotation.</param>
+        /// <param name="seqID">Sekvens-ID for bevægelsen.</param>
         public void Move(bool up, bool down, bool left, bool right, bool jump, float newRotY, float newRotZ, int seqID)
         {
             float elapsed = (float)(lastUpdate - DateTime.Now).TotalSeconds;
@@ -94,7 +107,9 @@ namespace GameServer
             this.seqID = seqID;
         }
 
-        // Metode til at skyde
+        /// <summary>
+        /// Udfører et skud, hvis der er ammunition tilgængelig.
+        /// </summary>
         public void Shoot()
         {
             // Tjek ammunition
@@ -113,7 +128,9 @@ namespace GameServer
             }
         }
 
-        // Metode til reload
+        /// <summary>
+        /// Reload
+        /// </summary>
         public void Reload()
         {
             // Tjek om spilleren allerede er i gang med at genoplade
@@ -150,6 +167,11 @@ namespace GameServer
             });
         }
 
+        /// <summary>
+        /// Giver skade til spilleren og udløser død, hvis helbredet er 0 eller lavere.
+        /// </summary>
+        /// <param name="damage">Antal skadepoint.</param>
+        /// <param name="shootersId">ID på spilleren, der skød.</param>
         public void TakeDamage(int damage, byte shootersId)
         {
             health -= damage;
@@ -164,12 +186,19 @@ namespace GameServer
             OnHealthChanged.Invoke(health);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void OnKill()
         {
             points++;  
             OnPointsChanged?.Invoke(points);  
         }
 
+        /// <summary>
+        /// Genererer en opdateringspakke med spillerens aktuelle status.
+        /// </summary>
+        /// <returns>En PlayerInfoUpdate instans med spillerens aktuelle status.</returns>
         public PlayerInfoUpdate CreatePlayerInfoUpdate()
         {
             PlayerInfoUpdate update = new PlayerInfoUpdate
@@ -181,6 +210,10 @@ namespace GameServer
             return update;
         }
 
+        /// <summary>
+        /// Asynkront opdaterer pointtavlen ved at sende data til en REST API.
+        /// </summary>
+        /// <param name="newScore">Den nye score for spilleren.</param>
         public async void UpdateScoreboard(int newScore)
         {
             ScoreboardModel score = new ScoreboardModel

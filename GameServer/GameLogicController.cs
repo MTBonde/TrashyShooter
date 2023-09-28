@@ -4,6 +4,9 @@ using SharedData;
 
 namespace GameServer
 {
+    /// <summary>
+    /// Kontrollerer spillets logik, inklusive styring af spillets verden, spillere og andre managers.
+    /// </summary>
     public class GameLogicController
     {
         private GameWorldManager gameWorldManager;
@@ -11,6 +14,12 @@ namespace GameServer
         private LagCompensationManager lagCompensationManager;
         public PlayerManager playerManager;
 
+        /// <summary>
+        /// Initialiserer en ny instans af GameLogicController klassen.
+        /// </summary>
+        /// <param name="snapshotManager">Reference til SnapshotManager.</param>
+        /// <param name="lagCompensationManager">Reference til LagCompensationManager.</param>
+        /// <param name="playerManager">Reference til PlayerManager.</param>
         public GameLogicController(SnapshotManager snapshotManager,
                               LagCompensationManager lagCompensationManager,
                               PlayerManager playerManager)
@@ -24,6 +33,9 @@ namespace GameServer
             SubscribeToGameWorldEvents();
         }
 
+        /// <summary>
+        /// Abonnerer på relevante begivenheder fra GameWorldManager.
+        /// </summary>
         private void SubscribeToGameWorldEvents()
         {
             // Subscribe to events
@@ -33,6 +45,9 @@ namespace GameServer
             gameWorldManager.CountdownStarted += OnCountdownStarted;
         }
 
+        /// <summary>
+        /// Udføres når en spilrunde slutter. Rydder op og forbereder til næste runde.
+        /// </summary>
         private void OnGameRoundStarted()
         {
             // Initialize Random class
@@ -73,6 +88,11 @@ namespace GameServer
 
         }
 
+        /// <summary>
+        /// Håndterer en spillers tilslutning til spillet.
+        /// </summary>
+        /// <param name="playerID">Spillerens unikke ID.</param>
+        /// <param name="playerName">Spillerens navn.</param>
         public void HandleJoin(byte playerID, string playerName)
         {
             playerManager.AddPlayer(playerID, playerName);
@@ -87,6 +107,11 @@ namespace GameServer
             }
         }
 
+        /// <summary>
+        /// Asynkront opdaterer en spillers tilstand baseret på indkommende opdateringer.
+        /// </summary>
+        /// <param name="update">Den modtagne spilleropdatering.</param>
+        /// <param name="playerID">Spillerens unikke ID.</param>
         public async Task HandlePlayerUpdate(PlayerUpdate update, byte playerID)
         {
             playerManager.UpdatePlayerState(playerID, update);
@@ -112,12 +137,20 @@ namespace GameServer
             snapshotManager.TakeSnapshot(playerManager.players);
         }
 
+        /// <summary>
+        /// Håndterer en spillers frakobling fra spillet.
+        /// </summary>
+        /// <param name="playerID">Spillerens unikke ID.</param>
         public void HandlePlayerLeft(byte playerID)
         {
             playerManager.RemovePlayer(playerID);
 
         }
 
+        /// <summary>
+        /// Håndterer en spillers død.
+        /// </summary>
+        /// <param name="deadPlayerID">Den døde spillers unikke ID.</param>
         private void HandlePlayerDeath(byte deadPlayerID)
         {
             // TODO: denne spiller er død.

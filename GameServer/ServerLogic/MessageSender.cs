@@ -192,7 +192,7 @@ namespace GameServer
             }            
         }
 
-
+        #region ACKTry
         // TODO: Tracking of ack
 
         // Structure to hold message information
@@ -317,7 +317,6 @@ namespace GameServer
         {
             stopTimer = true;
         }
+        #endregion
     }
-
-
 }

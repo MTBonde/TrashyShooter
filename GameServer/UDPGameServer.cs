@@ -8,7 +8,9 @@ using System.Threading;
 
 namespace GameServer
 {
-    // Main server class 
+    /// <summary>
+    /// Hovedklasse for UDP Serveren for Spillet
+    /// </summary>
     public class UDPGameServer
     {
         // UDP client to manage incoming and outgoing data.
@@ -31,7 +33,10 @@ namespace GameServer
         private readonly object lockObject = new object();
         private Queue<byte> reusableIDs = new Queue<byte>();
 
-        // Constructor: Initialize the server.
+        /// <summary>
+        /// Initialiserer en ny instans af UDPGameServer klassen.
+        /// </summary>
+        /// <param name="port">Portnummer, der skal lyttes på.</param>
         public UDPGameServer(int port)
         {
             // Initialize UdpClient and bind it to the given port.
@@ -55,16 +60,20 @@ namespace GameServer
             
         }
 
-        //TODO: flyt et bedre sted hen
+        /// <summary>
+        /// Opdaterer spillerinformation og sender den til klienten.
+        /// </summary>
+        /// <param name="updateMessage">Netværksbesked med spilleropdatering.</param>
+        /// <param name="id">Spillerens unikke ID.</param>
         void UpdatePlayerInfo(NetworkMessage updateMessage, byte id)
         {
             MessageSender.SendAsync((PlayerInfoUpdate)updateMessage, MessageType.PlayerInfoUpdate, MessagePriority.Low, clientManager.clients[id]);
         }
 
         /// <summary>
-        /// Asynchronous method for starting the server
+        /// Asynkron metode, der starter serveren og håndterer indkommende beskeder.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Task repræsentation af den asynkrone operation.</returns>
         public async Task StartAsync()
         {
             IPEndPoint RemoteEndPoint = null;  
@@ -82,7 +91,6 @@ namespace GameServer
 
                     // Håndterer den modtagne besked ved hjælp af MessageHandler eller chat.
                     await messageHandler.HandleIncomingMessage(result.Buffer, playerID);
-
                     await chatManager.HandleIncomingMessage(result.Buffer, playerID);
 
                 }
@@ -92,9 +100,8 @@ namespace GameServer
                     // finder typen af den fangede exception.
                     string exceptionType = e.GetType().ToString();
 
-                    // Udskriver beskeden og typen af exception.
-                    Console.WriteLine($"!ERROR! An unexpected error occurred: {e.Message}. Exception Type: {exceptionType}");
-                    Console.WriteLine($"Exception: {e.Message}\nStack Trace: {e.StackTrace}");
+                    // Udskriver beskeden og typen af exception.                  
+                    Console.WriteLine($"!ERROR! An unexpected error occurred: {e.Message}. Exception Type: {exceptionType} Stack Trace: {e.StackTrace}");
                     // Guard clause for non-SocketException types
                     if (!(e is SocketException))
                     {
@@ -110,7 +117,7 @@ namespace GameServer
                         return;
                     }
 
-                    // Håndter den fangede socketexception
+                    // Håndter socketexception
                     clientManager.HandleClientLeftUnexpectedly((SocketException)e, RemoteEndPoint);
                 }                
             }

@@ -10,20 +10,7 @@ namespace GameServer
     {
         // Colliderens position i verden
         public Vector3 position;
-
-        //public Collider()
-        //{
-        //    // Tilføjer denne collider til den globale liste over colliders
-        //    CollisionManager.colliders.Add(this);
-        //}
-
-        //public Collider(bool addToColliders)
-        //{
-        //    // Tilføjer denne collider til den globale liste over colliders
-        //    if (addToColliders)
-        //        CollisionManager.colliders.Add(this);
-        //}
-
+        
         // Abstrakte metoder for kollisionskontrol
         public abstract CollisionInfo CheckPointCollision(Vector3 startPoint, Vector3 endPoint);
         public abstract CollisionInfo CheckCylinderCollision(Vector3 startPoint, Vector3 endPoint, float radius, float height);
