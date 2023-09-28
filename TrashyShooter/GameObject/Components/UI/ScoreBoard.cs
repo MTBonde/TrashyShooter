@@ -53,10 +53,11 @@ namespace MultiplayerEngine
 
         public async void ShowScoreboard()
         {
-            await NetworkManager.GetScoreboard();
+            List<ScoreboardModel> scoreboardData = await NetworkManager.GetScoreboard();
             backgroundSprite.gameObject.enabled = true;
-            for (int i = 0; i < scores.Length; i++)
+            for (int i = 0; i < scoreboardData.Count; i++)
             {
+                scores[i].SetText(scoreboardData[i].playerName + ":" + scoreboardData[i].score);
                 scores[i].gameObject.enabled = true;
             }
         }

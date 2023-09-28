@@ -161,7 +161,7 @@ namespace MultiplayerEngine
             return restClient;
         }
 
-        public static async Task<Dictionary<int, ScoreboardModel>> GetScoreboard()
+        public static async Task<List<ScoreboardModel>> GetScoreboard()
         {
             try
             {
@@ -170,7 +170,7 @@ namespace MultiplayerEngine
                 {
                     string jsonContent = await response.Content.ReadAsStringAsync();
                     Debug.WriteLine(jsonContent);
-                    var scoreboard = JsonSerializer.Deserialize<Dictionary<int, ScoreboardModel>>(jsonContent);
+                    var scoreboard = JsonSerializer.Deserialize<List<ScoreboardModel>>(jsonContent);
                     return scoreboard;
                 }
                 else 
