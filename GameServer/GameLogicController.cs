@@ -80,9 +80,7 @@ namespace GameServer
 
             if(playerManager.players.Count >= 1 && !gameWorldManager.GameRoundStartet)
             {
-                gameWorldManager.StartGameStartCountdown();
-
-                
+                gameWorldManager.StartGameStartCountdown();              
 
             }
         }
