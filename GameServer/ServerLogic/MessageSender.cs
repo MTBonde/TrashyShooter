@@ -57,6 +57,9 @@ namespace GameServer
         {
             Guid messageId = Guid.NewGuid();
 
+            if(priority == MessagePriority.High)
+                message.MessageId = messageId;
+
             // Bruger NetworkMessageProtocol til at lave en samlet serialiseret netværksbesked
             (byte[] MessageBytes, int Length, IPEndPoint ClientEP) networkMessage = NetworkMessageProtocol.SendNetworkMessage(message,
                                                                                                                               messageType,

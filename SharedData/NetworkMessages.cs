@@ -12,6 +12,8 @@ namespace SharedData
         public byte GetMessageTypeAsByte => (byte)MessageType;
         [Key(0)]
         public bool PriorityMessage { get; set; }
+        [Key(1)]
+        public Guid MessageId;
     }
 
     [MessagePackObject]
@@ -20,14 +22,14 @@ namespace SharedData
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ClientHasJoined;
         //public override bool PriorityMessage { get; set; } = true;
-        [Key(1)]
+        [Key(3)]
         public string playerName;
     }
 
     [MessagePackObject]
     public class ClientJoinAnswer : NetworkMessage
     {
-        [Key(1)]
+        [Key(3)]
         public byte playerID;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ClientJoinAnswer;
@@ -55,7 +57,7 @@ namespace SharedData
     [MessagePackObject]
     public class PlayerJoined : NetworkMessage
     {
-        [Key(1)]
+        [Key(3)]
         public byte playerID;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerJoined;
@@ -65,7 +67,7 @@ namespace SharedData
     [MessagePackObject]
     public class PlayerLeft : NetworkMessage
     {
-        [Key(1)]
+        [Key(3)]
         public byte playerID;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerLeft;
@@ -75,21 +77,21 @@ namespace SharedData
     [MessagePackObject]
     public class PlayerSnapShot : NetworkMessage
     {
-        [Key(1)]
-        public int SnapSeqId;
         [Key(2)]
-        public byte playerID;
+        public int SnapSeqId;
         [Key(3)]
-        public float positionX;
+        public byte playerID;
         [Key(4)]
-        public float positionY;
+        public float positionX;
         [Key(5)]
-        public float positionZ;
+        public float positionY;
         [Key(6)]
-        public float rotZ;
+        public float positionZ;
         [Key(7)]
-        public int health;  // Added health property
+        public float rotZ;
         [Key(8)]
+        public int health;  // Added health property
+        [Key(9)]
         public int ammo;    // Added ammo property
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerSnapShot;
@@ -99,25 +101,25 @@ namespace SharedData
     [MessagePackObject]
     public class PlayerUpdate : NetworkMessage
     {
-        [Key(1)]
-        public int SnapSeqId;
         [Key(2)]
-        public bool up;
+        public int SnapSeqId;
         [Key(3)]
-        public bool down;
+        public bool up;
         [Key(4)]
-        public bool left;
+        public bool down;
         [Key(5)]
-        public bool right;
+        public bool left;
         [Key(6)]
-        public bool jump;
+        public bool right;
         [Key(7)]
-        public bool shoot;
+        public bool jump;
         [Key(8)]
-        public bool reload;
+        public bool shoot;
         [Key(9)]
-        public float rotZ;
+        public bool reload;
         [Key(10)]
+        public float rotZ;
+        [Key(11)]
         public float rotY;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerUpdate;
@@ -127,11 +129,11 @@ namespace SharedData
     [MessagePackObject]
     public class PlayerInfoUpdate : NetworkMessage
     {
-        [Key(1)]
-        public int health;
         [Key(2)]
-        public int ammo;
+        public int health;
         [Key(3)]
+        public int ammo;
+        [Key(4)]
         public int points;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerInfoUpdate;
@@ -141,19 +143,19 @@ namespace SharedData
     [MessagePackObject]
     public class LaserShot : NetworkMessage
     {
-        [Key(1)]
-        public float posX;
         [Key(2)]
-        public float posY;
+        public float posX;
         [Key(3)]
-        public float posZ;
+        public float posY;
         [Key(4)]
-        public float rotX;
+        public float posZ;
         [Key(5)]
-        public float rotY;
+        public float rotX;
         [Key(6)]
-        public float rotZ;
+        public float rotY;
         [Key(7)]
+        public float rotZ;
+        [Key(8)]
         public float length;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.LaserShot;
@@ -164,11 +166,11 @@ namespace SharedData
     public class ChatMessage : NetworkMessage
     {
         
-        [Key(1)] 
-        public string Message;
         [Key(2)] 
-        public string UserName;
+        public string Message;
         [Key(3)] 
+        public string UserName;
+        [Key(4)] 
         public DateTime Time;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ChatMessage;
@@ -179,15 +181,15 @@ namespace SharedData
     public class ChatCommand : NetworkMessage
     {
         
-        [Key(1)] 
-        public Commands Command;
         [Key(2)] 
-        public string? UserName;
+        public Commands Command;
         [Key(3)] 
-        public DateTime Time;
+        public string? UserName;
         [Key(4)] 
-        public string? TargetName;
+        public DateTime Time;
         [Key(5)] 
+        public string? TargetName;
+        [Key(6)] 
         public string? Message;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ChatCommand;
@@ -197,12 +199,10 @@ namespace SharedData
     [MessagePackObject]
     public class ChatAcknowledgement : NetworkMessage
     {
-        [Key(1)]
-        public byte playerID;
         [Key(2)]
-        public MessageType OriginalMessageType;
+        public byte playerID;
         [Key(3)]
-        public Guid MessageId;
+        public MessageType OriginalMessageType;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ChatAcknowledgement;
         //public override bool PriorityMessage { get; set; } = true;
@@ -211,12 +211,10 @@ namespace SharedData
     [MessagePackObject]
     public class Acknowledgement : NetworkMessage
     {
-        [Key(1)]
-        public byte playerID;
         [Key(2)]
-        public MessageType OriginalMessageType;
+        public byte playerID;
         [Key(3)]
-        public Guid MessageId;
+        public MessageType OriginalMessageType;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.Acknowledgement;
         //public override bool PriorityMessage { get; set; } = true;
