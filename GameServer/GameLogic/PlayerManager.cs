@@ -175,12 +175,14 @@ namespace GameServer
         {
             PlayerInfo player = players[id];
             player.pos = spawnPoint;
+            player.points = 0;
             player.health = 100;
             player.ammoInMagazine = player.maxAmmo;
             player.isReloading = false;
             player.playerCol.position = player.pos;
             player.InvokeOnHealthChanged();
             player.InvokeOnAmmoChanged();
+            //player.OnPointsChanged.Invoke();
         }
     }
 }

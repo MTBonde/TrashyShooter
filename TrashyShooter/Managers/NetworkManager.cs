@@ -180,6 +180,8 @@ namespace MultiplayerEngine
                 }
             }
 
+            Dictionary<Guid, bool> received = new Dictionary<Guid, bool>();
+
             public void AddAckMessage<T>(T message, Guid id) where T : NetworkMessage
             {
                 MessageInfo<T> messageInfo = new MessageInfo<T>(message, id);
@@ -192,13 +194,11 @@ namespace MultiplayerEngine
                 received[id] = true;
             }
 
-            Dictionary<Guid, bool> received = new Dictionary<Guid, bool>();
-
             public async Task RetrySendMessage<T>(MessageInfo<T> messageToAck) where T : NetworkMessage
             {
                 while (!received[messageToAck.messageID])
                 {
-                    await Task.Delay(5000);
+                    await Task.Delay(1000);
                     if (received[messageToAck.messageID])
                         break;
                     SendDataToServer(messageToAck.message);
