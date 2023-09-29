@@ -182,7 +182,6 @@ namespace GameServer
             player.playerCol.position = player.pos;
             player.InvokeOnHealthChanged();
             player.InvokeOnAmmoChanged();
-            //player.OnPointsChanged.Invoke();
         }
     }
 }
