@@ -132,7 +132,7 @@ namespace MultiplayerEngine
                 if(message.PriorityMessage == true)
                 {
                     priority = MessagePriority.High;
-                    Guid id = new Guid();
+                    Guid id = Guid.NewGuid();
                     message.MessageId = id;
                     AddAckMessage(message, id);
                 }
