@@ -100,7 +100,7 @@ namespace GameServer
             playerManager.RESTPost(playerID, playerName);
         
 
-            if(playerManager.players.Count >= 1 && !gameWorldManager.GameRoundStartet)
+            if(playerManager.players.Count >= 2 && !gameWorldManager.GameRoundStartet)
             {
                 gameWorldManager.StartGameStartCountdown();              
 
