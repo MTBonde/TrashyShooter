@@ -238,13 +238,13 @@ namespace MultiplayerEngine
                             update.reload = false;
                         if (lastMouseState.LeftButton.HasFlag(ButtonState.Pressed) != mouseState.LeftButton.HasFlag(ButtonState.Pressed) && !reloadTimer.IsRunning)
                         {
-                            if (hud.ammo > 0)
-                            {
+                            //if (hud.ammo > 0)
+                            //{
                                 update.shoot = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
                                 update.PriorityMessage = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
-                            }
-                            else
-                                update.shoot = false;
+                            //}
+                            //else
+                            //    update.shoot = false;
                         }
                         else
                             update.shoot = false;
