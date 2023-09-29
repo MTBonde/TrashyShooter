@@ -252,7 +252,42 @@ namespace GameServer
                 }
 
                 // Resend the message
-                await SendAsync(messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
+                switch (messageInfo.Type)
+                {
+                    case MessageType.ClientHasJoined:
+                        await SendAsync((ClientHasJoined)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
+                        break;
+                    case MessageType.ClientJoinAnswer:
+                        break;
+                    case MessageType.ClientHasLeft:
+                        break;
+                    case MessageType.ServerInfoMessage:
+                        break;
+                    case MessageType.PlayerJoined:
+                        break;
+                    case MessageType.PlayerLeft:
+                        break;
+                    case MessageType.PlayerUpdate:
+                        break;
+                    case MessageType.PlayerSnapShot:
+                        break;
+                    case MessageType.PlayerInfoUpdate:
+                        break;
+                    case MessageType.LaserShot:
+                        break;
+                    case MessageType.ChatMessage:
+                        break;
+                    case MessageType.ChatCommand:
+                        break;
+                    case MessageType.ChatAcknowledgement:
+                        break;
+                    case MessageType.Error:
+                        break;
+                    case MessageType.Acknowledgement:
+                        break;
+                    case MessageType.res4:
+                        break;
+                }
 
                 // Increment the attempt count
                 messageInfo.Attempts++;
