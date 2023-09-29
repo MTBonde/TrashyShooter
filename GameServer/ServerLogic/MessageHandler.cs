@@ -68,7 +68,7 @@ namespace GameServer
                 // Send acknowledgment if the message is high priority
                 if(messagePriority == MessagePriority.High)
                 {
-                    // TODO: ACK ID await MessageSender.SendAcknowledgment(playerID, messageType, messageId);
+                    await MessageSender.SendAcknowledgment(playerID, messageType, message.MessageId);
                 }
             }
             else
