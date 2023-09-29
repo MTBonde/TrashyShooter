@@ -224,9 +224,9 @@ namespace GameServer
         // Method to add a message to the unacknowledged list
         public static void TrackMessage(NetworkMessage message, MessageType type, MessagePriority priority, IPEndPoint clientEP, byte clientId)
         {
-            Guid messageId = Guid.NewGuid();  // Generate a unique ID for this message
+            //Guid messageId = Guid.NewGuid();  // Generate a unique ID for this message
             UnacknowledgedMessageInfo messageInfo = new UnacknowledgedMessageInfo(message, type, priority, clientEP, DateTime.UtcNow);
-            unacknowledgedMessages.TryAdd(messageId, messageInfo);
+            unacknowledgedMessages.TryAdd(message.MessageId, messageInfo);
 
 
         }

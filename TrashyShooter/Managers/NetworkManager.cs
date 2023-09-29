@@ -64,9 +64,10 @@ namespace MultiplayerEngine
                     Acknowledgement acknowledgement = new Acknowledgement();
                     acknowledgement.MessageId = message.MessageId;
                     acknowledgement.OriginalMessageType = messageInfo.Type;
+                    acknowledgement.PriorityMessage = false;
                     for (int i = 0; i < ackAmount; i++)
                     {
-                        GameClient.SendDataToServer(acknowledgement);
+                        GameWorld.Instance.gameClient.SendDataToServer(acknowledgement);
                     }
                 }
                 switch (messageInfo.Type)
