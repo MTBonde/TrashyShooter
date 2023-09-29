@@ -258,22 +258,31 @@ namespace GameServer
                         await SendAsync((ClientHasJoined)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.ClientJoinAnswer:
+                        await SendAsync((ClientJoinAnswer)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.ClientHasLeft:
+                        await SendAsync((ClientHasLeft)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.ServerInfoMessage:
+                        await SendAsync((ServerInfoMessage)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.PlayerJoined:
+                        await SendAsync((PlayerJoined)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.PlayerLeft:
+                        await SendAsync((PlayerLeft)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.PlayerUpdate:
+                        await SendAsync((PlayerUpdate)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.PlayerSnapShot:
+                        await SendAsync((PlayerSnapShot)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.PlayerInfoUpdate:
+                        await SendAsync((PlayerInfoUpdate)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.LaserShot:
+                        await SendAsync((LaserShot)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.ChatMessage:
                         break;
