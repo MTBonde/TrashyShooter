@@ -22,14 +22,14 @@ namespace SharedData
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ClientHasJoined;
         //public override bool PriorityMessage { get; set; } = true;
-        [Key(3)]
+        [Key(2)]
         public string playerName;
     }
 
     [MessagePackObject]
     public class ClientJoinAnswer : NetworkMessage
     {
-        [Key(3)]
+        [Key(2)]
         public byte playerID;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ClientJoinAnswer;
@@ -47,7 +47,7 @@ namespace SharedData
     [MessagePackObject]
     public class ServerInfoMessage : NetworkMessage
     {
-        [Key(1)]
+        [Key(2)]
         public string ServerInformation;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.ServerInfoMessage;
@@ -57,7 +57,7 @@ namespace SharedData
     [MessagePackObject]
     public class PlayerJoined : NetworkMessage
     {
-        [Key(3)]
+        [Key(2)]
         public byte playerID;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerJoined;
@@ -67,7 +67,7 @@ namespace SharedData
     [MessagePackObject]
     public class PlayerLeft : NetworkMessage
     {
-        [Key(3)]
+        [Key(2)]
         public byte playerID;
         [IgnoreMember]
         public override MessageType MessageType => MessageType.PlayerLeft;
