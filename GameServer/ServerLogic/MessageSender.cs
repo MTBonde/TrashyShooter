@@ -174,7 +174,7 @@ namespace GameServer
                 if(clients.TryGetValue(playerID, out IPEndPoint clientEndPoint))
                 {
                     // send the acknowledgment back to the client
-                    await SendAsync((ChatAcknowledgement)acknowledgmentMessage, MessageType.ChatAcknowledgement, MessagePriority.High, clientEndPoint);
+                    await SendAsync((ChatAcknowledgement)acknowledgmentMessage, MessageType.ChatAcknowledgement, MessagePriority.low, clientEndPoint);
                 }
             }
             else
@@ -190,7 +190,7 @@ namespace GameServer
                 if(clients.TryGetValue(playerID, out IPEndPoint clientEndPoint))
                 {
                     // send the acknowledgment back to the client
-                    await SendAsync((Acknowledgement)acknowledgmentMessage, MessageType.Acknowledgement, MessagePriority.High, clientEndPoint);
+                    await SendAsync((Acknowledgement)acknowledgmentMessage, MessageType.Acknowledgement, MessagePriority.low, clientEndPoint);
                 }
             }            
         }
