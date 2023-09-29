@@ -11,6 +11,7 @@ using System.Text;
 using SharedData;
 using REST_API;
 using System.Text.Json;
+using System.Collections.Concurrent;
 
 namespace MultiplayerEngine
 {
@@ -181,12 +182,12 @@ namespace MultiplayerEngine
                 }
             }
 
-            Dictionary<Guid, bool> received = new Dictionary<Guid, bool>();
+            ConcurrentDictionary<Guid, bool> received = new ConcurrentDictionary<Guid, bool>();
 
             public void AddAckMessage<T>(T message, Guid id) where T : NetworkMessage
             {
                 MessageInfo<T> messageInfo = new MessageInfo<T>(message, id);
-                received.Add(messageInfo.messageID, false);
+                received.TryAdd(messageInfo.messageID, false);
                 RetrySendMessage(messageInfo);
             }
 
@@ -204,7 +205,7 @@ namespace MultiplayerEngine
                         break;
                     SendDataToServer(messageToAck.message);
                 }
-                received.Remove(messageToAck.messageID);
+                received.TryRemove(messageToAck.messageID, out bool bo);
             }
         }
         #endregion
