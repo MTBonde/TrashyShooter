@@ -285,16 +285,22 @@ namespace GameServer
                         await SendAsync((LaserShot)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.ChatMessage:
+                        await SendAsync((ChatMessage)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.ChatCommand:
+                        await SendAsync((ChatCommand)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.ChatAcknowledgement:
+                        await SendAsync((ChatAcknowledgement)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.Error:
+                        //await SendAsync((Eror)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.Acknowledgement:
+                        await SendAsync((Acknowledgement)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                     case MessageType.res4:
+                        //await SendAsync((Res4)messageInfo.Message, messageInfo.Type, messageInfo.Priority, messageInfo.ClientEP);
                         break;
                 }
 
