@@ -241,7 +241,7 @@ namespace MultiplayerEngine
                             //if (hud.ammo > 0)
                             //{
                                 update.shoot = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
-                                //update.PriorityMessage = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
+                                update.PriorityMessage = mouseState.LeftButton.HasFlag(ButtonState.Pressed);
                             //}
                             //else
                             //    update.shoot = false;
