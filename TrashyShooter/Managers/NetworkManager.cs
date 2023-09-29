@@ -54,10 +54,21 @@ namespace MultiplayerEngine
                 this.OnDataRecievedEvent = OnDataRecieved;
             }
 
+            readonly int ackAmount = 5;
             private void OnDataRecieved(byte[] receivedData)
             {
                 (NetworkMessage Message, MessageType Type, MessagePriority Priority) messageInfo = NetworkMessageProtocol.ReceiveNetworkMessage(receivedData);
                 NetworkMessage message = messageInfo.Message;
+                if (messageInfo.Priority == MessagePriority.High)
+                {
+                    Acknowledgement acknowledgement = new Acknowledgement();
+                    acknowledgement.MessageId = message.MessageId;
+                    acknowledgement.OriginalMessageType = messageInfo.Type;
+                    for (int i = 0; i < ackAmount; i++)
+                    {
+                        GameClient.SendDataToServer(acknowledgement);
+                    }
+                }
                 switch (messageInfo.Type)
                 {
                     case MessageType.ClientJoinAnswer:
@@ -100,6 +111,9 @@ namespace MultiplayerEngine
                     case MessageType.ServerInfoMessage:
                         message = (ServerInfoMessage)messageInfo.Message;
                         break;
+                    case MessageType.Acknowledgement:
+                        AckReceived(((Acknowledgement)message).MessageId);
+                        break;
                     //case MessageType.ScoreboardUpdate:
                     //    message = (JoinAnswer)messageInfo.Message;
                     //    break;
@@ -113,7 +127,15 @@ namespace MultiplayerEngine
             public async void SendDataToServer<T>(T message) where T : NetworkMessage
             {
                 //await Task.Delay(2000);
-                udpClient.Send(NetworkMessageProtocol.SendNetworkMessage<T>(message, message.MessageType, MessagePriority.Low, endPoint).MessageBytes);
+                MessagePriority priority = MessagePriority.Low;
+                if(message.PriorityMessage == true)
+                {
+                    priority = MessagePriority.High;
+                    Guid id = new Guid();
+                    message.MessageId = id;
+                    AddAckMessage(message, id);
+                }
+                udpClient.Send(NetworkMessageProtocol.SendNetworkMessage<T>(message, message.MessageType, priority, endPoint).MessageBytes);
                 //byte[] messageBytes = new byte[1024];
                 //byte messageTypeByte = message.GetMessageTypeAsByte;
                 //switch (message.MessageType)
@@ -143,6 +165,45 @@ namespace MultiplayerEngine
                     byte[] serverResponse = udpClient.Receive(ref endPoint);
                     OnDataRecievedEvent.Invoke(serverResponse);
                 }
+            }
+
+            public class MessageInfo<T> where T : NetworkMessage
+            {
+
+                public T message;
+                public Guid messageID;
+
+                public MessageInfo(T message, Guid messageID)
+                {
+                    this.message = message;
+                    this.messageID = messageID;
+                }
+            }
+
+            public void AddAckMessage<T>(T message, Guid id) where T : NetworkMessage
+            {
+                MessageInfo<T> messageInfo = new MessageInfo<T>(message, id);
+                received.Add(messageInfo.messageID, false);
+                RetrySendMessage(messageInfo);
+            }
+
+            public void AckReceived(Guid id)
+            {
+                received[id] = true;
+            }
+
+            Dictionary<Guid, bool> received = new Dictionary<Guid, bool>();
+
+            public async Task RetrySendMessage<T>(MessageInfo<T> messageToAck) where T : NetworkMessage
+            {
+                while (!received[messageToAck.messageID])
+                {
+                    await Task.Delay(5000);
+                    if (received[messageToAck.messageID])
+                        break;
+                    SendDataToServer(messageToAck.message);
+                }
+                received.Remove(messageToAck.messageID);
             }
         }
         #endregion
